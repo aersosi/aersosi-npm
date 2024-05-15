@@ -38,7 +38,7 @@ const manuIndexOptions = {
 
 const manuBackExitOptions = {
     type: 'list',
-    style: '',
+    prefix: '',
     name: 'menuBack',
     message: 'Go back or Exit?',
     choices: [
