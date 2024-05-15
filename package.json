@@ -1,0 +1,30 @@
+{
+  "type": "module",
+  "name": "aersosi-npm",
+  "version": "1.0.0",
+  "description": "My resume as an NPM package",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "chalk": "^4.1.2",
+    "figlet": "^1.7.0",
+    "inquirer": "^8.1.2",
+    "strip-ansi": "^7.1.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aersosi/aersosi-npm.git"
+  },
+  "keywords": [
+    "resume",
+    "npm"
+  ],
+  "author": "Arthur Ersosi",
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/aersosi/aersosi-npm/issues"
+  },
+  "homepage": "https://github.com/aersosi/aersosi-npm#readme"
+}
