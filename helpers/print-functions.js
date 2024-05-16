@@ -1,7 +1,11 @@
-import outlineElements from './outline-styles.json' with {type: 'json'};
+import fs from 'fs';
+import path from 'path';
 import chalk from 'chalk';
 import figlet from "figlet";
 import {faceAsciiArt} from "../data/faceAsciiArt.js";
+
+const outlineElementsPath = path.resolve('./helpers/outline-styles.json');
+const outlineElements = JSON.parse(fs.readFileSync(outlineElementsPath, 'utf8'));
 
 export function PrintFunctions(
     boxWidth = 70,

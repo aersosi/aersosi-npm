@@ -3,8 +3,12 @@
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import stripAnsi from 'strip-ansi';
-import resume from './data/resume.json' with {type: 'json'};
-import {PrintFunctions} from './helpers/print-functions.js';
+import fs from 'fs';
+import path from 'path';
+import { PrintFunctions } from './helpers/print-functions.js';
+
+const resumePath = path.resolve('./data/resume.json');
+const resume = JSON.parse(fs.readFileSync(resumePath, 'utf8'));
 
 const orangeColors = {
     1: '#ffff33',
