@@ -3,7 +3,7 @@
 import inquirer from 'inquirer';
 import chalk from 'chalk';
 import stripAnsi from 'strip-ansi';
-import resume from './data/resume.json' assert {type: 'json'};
+import resume from './data/resume.json' with {type: 'json'};
 import {PrintFunctions} from './helpers/print-functions.js';
 
 const orangeColors = {

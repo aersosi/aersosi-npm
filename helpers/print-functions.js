@@ -1,4 +1,4 @@
-import outlineElements from './outline-styles.json' assert {type: 'json'};
+import outlineElements from './outline-styles.json' with {type: 'json'};
 import chalk from 'chalk';
 import figlet from "figlet";
 import {faceAsciiArt} from "../data/faceAsciiArt.js";
