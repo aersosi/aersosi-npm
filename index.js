@@ -15,7 +15,8 @@ const orangeColors = {
     2: '#ffbf00',
     3: '#ff9500',
     4: '#ff6a00',
-    5: '#ff4000'
+    5: '#ff4000',
+    6: ''
 };
 
 const orangeChalk = {};

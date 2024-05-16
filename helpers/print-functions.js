@@ -17,7 +17,8 @@ export function PrintFunctions(
         2: '#cccccc',
         3: '#999999',
         4: '#666666',
-        5: '#333333'
+        5: '#333333',
+        6: '',
     }
 ) {
     this.length = boxWidth - 2;
@@ -97,6 +98,8 @@ export function PrintFunctions(
     this.TitleASCII = function (string = 'test', textPaddingX = null) {
         const asciiArt = figlet.textSync(string, {
             font: 'ANSI Regular',
+            width: boxWidth,
+            whitespaceBreak: true,
         });
 
         let lines = asciiArt.split('\n');
@@ -117,8 +120,12 @@ export function PrintFunctions(
         }
 
         const colorValues = Object.values(gradient);
+
+        // Create the gradient: forward and then backward
+        const repeatedColors = [...colorValues, ...colorValues.slice(0, -1).reverse()];
+
         const coloredLines = lines.map((line, index) => {
-            const color = colorValues[index % colorValues.length];
+            const color = repeatedColors[index % repeatedColors.length];
             return chalk.hex(color)(`${' '.repeat(textPaddingX)}${line}`);
         });
 
