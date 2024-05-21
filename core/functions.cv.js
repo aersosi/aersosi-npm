@@ -4,9 +4,8 @@ import path from "path";
 import fs from "fs";
 
 import { print } from "./functions.print.js";
-import { colorsChalk, orangeColors } from "./config.colors.js";
+import { colorsChalk } from "./config.colors.js";
 import { manuBackExitOptions, manuIndexOptions } from "./config.menu.js";
-import { ASCIIart1, ASCIIart2 } from "../data/data.ASCIIart.js";
 
 const resumePath = path.resolve('./data/data.resume.json');
 const resume = JSON.parse(fs.readFileSync(resumePath, 'utf8'));
@@ -15,7 +14,6 @@ export class CV {
     constructor() {
         this.print = print;
         this.resume = resume;
-        this.arts = [ASCIIart1, ASCIIart2];
     }
 
     async menuIndex() {
@@ -35,7 +33,6 @@ export class CV {
                 console.clear();
                 this.print.titleASCII('About Me');
                 this.print.faceASCII();
-                // this.animateASCIIart();
 
                 await this.menuBackExit();
             } else if (cleanOption === 'Exit') {
@@ -48,16 +45,6 @@ export class CV {
         } catch (error) {
             console.error('Error in menuIndex:', error);
         }
-    }
-
-    animateASCIIart() {
-        let x = 0;
-        return setInterval(() => {
-            console.clear();
-            this.print.titleASCII('About Me');
-            process.stdout.write("\r" + this.arts[x++]);
-            x &= 1;
-        }, 1000);
     }
 
     async menuBackExit() {

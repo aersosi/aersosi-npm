@@ -3,7 +3,7 @@ import path from 'path';
 import chalk from 'chalk';
 import figlet from 'figlet';
 
-import {ASCIIart, ASCIIart1, ASCIIart2} from '../data/data.ASCIIart.js';
+import {ASCIIart} from '../data/data.ASCIIart.js';
 import {orangeColors} from "./config.colors.js";
 
 const outlineElementsPath = path.resolve('./core/config.outlines.json');
@@ -49,7 +49,7 @@ class Print {
 
     text(string, textColor = this.color) {
         const ellipsis = '...';
-        let stringSanitized = string;
+        let stringSanitized;
 
         if (string.length > this.length - (this.textPaddingX * 2)) {
             stringSanitized = string.slice(0, this.length - (this.textPaddingX * 2) - ellipsis.length) + ellipsis;
@@ -78,7 +78,7 @@ class Print {
         }
 
         const colorValues = Object.values(this.gradient);
-        const repeatedColors = [...colorValues, ...colorValues.slice(0, -1).reverse()];
+        const repeatedColors = [...colorValues, ...colorValues.reverse()];
 
         const coloredLines = lines.map((line, index) => {
             const color = repeatedColors[index % repeatedColors.length];
@@ -93,6 +93,6 @@ class Print {
     }
 }
 
-const print = new Print(120, 4, chalk.whiteBright, 'rounded', orangeColors);
+const print = new Print(88, 4, chalk.whiteBright, 'rounded', orangeColors);
 
 export {print};
