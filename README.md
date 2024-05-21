@@ -14,5 +14,5 @@ npm start
 or
 
 ```sh
-npx aersosi
+npx @aersosi/cv
 ```
