@@ -3,21 +3,31 @@ import stripAnsi from "strip-ansi";
 import path from "path";
 import fs from "fs";
 
-import { print } from "./functions.print.js";
-import { colorsChalk } from "./config.colors.js";
-import { manuBackExitOptions, manuIndexOptions } from "./config.menu.js";
+import {Print} from "./functions.print.js";
+import {colorsChalk, orangeColors} from "./config.colors.js";
+import {manuBackExitOptions, manuIndexOptions} from "./config.menu.js";
+import chalk from "chalk";
 
 const resumePath = path.resolve('./data/data.resume.json');
 const resume = JSON.parse(fs.readFileSync(resumePath, 'utf8'));
+const consoleWidth = process.stdout.columns;
+
 
 export class CV {
     constructor() {
-        this.print = print;
+        this.print = new Print(88, 4, chalk.whiteBright, 'rounded', orangeColors);
         this.resume = resume;
     }
 
+    // Reliable Clear Console Escape Sequence
+    clearConsole() {
+        process.stdout.write('\x1Bc');
+    }
+
     async menuIndex() {
-        console.clear();
+        this.clearConsole();
+
+        // console.log('Terminal size: ' + process.stdout.columns + 'x' + process.stdout.rows);
 
         this.print.titleASCII('Index', 2);
         console.log(colorsChalk.orange5('  Hello, my name is Arthur Ersosi. Welcome to my resume!'));
@@ -30,15 +40,15 @@ export class CV {
             const cleanOption = stripAnsi(answer.resumeOptions);
 
             if (cleanOption === 'About Me') {
-                console.clear();
+                this.clearConsole();
                 this.print.titleASCII('About Me');
                 this.print.faceASCII();
 
                 await this.menuBackExit();
             } else if (cleanOption === 'Exit') {
-                console.clear();
+                this.clearConsole();
             } else {
-                console.clear();
+                this.clearConsole();
                 await this.showResumePage(cleanOption);
                 await this.menuBackExit();
             }
@@ -55,10 +65,10 @@ export class CV {
             const cleanOption = stripAnsi(choice.menuBack);
 
             if (cleanOption === 'Back') {
-                console.clear();
+                this.clearConsole();
                 await this.menuIndex();
             } else {
-                console.clear();
+                this.clearConsole();
             }
         } catch (error) {
             console.error('Error in menuBackExit:', error);

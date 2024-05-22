@@ -4,12 +4,11 @@ import chalk from 'chalk';
 import figlet from 'figlet';
 
 import {ASCIIart} from '../data/data.ASCIIart.js';
-import {orangeColors} from "./config.colors.js";
 
 const outlineElementsPath = path.resolve('./core/config.outlines.json');
 const outlineElements = JSON.parse(fs.readFileSync(outlineElementsPath, 'utf8'));
 
-class Print {
+export class Print {
     constructor(
         boxWidth = 70,
         textPaddingX = 5,
@@ -32,19 +31,27 @@ class Print {
     }
 
     top() {
-        console.log(this.color(`${this.style.topLeft}${this.style.horizontal.repeat(this.length)}${this.style.topRight}`));
+        console.log(this.color(
+            `${this.style.topLeft}${this.style.horizontal.repeat(this.length)}${this.style.topRight}`
+        ));
     }
 
     bottom() {
-        console.log(this.color(`${this.style.bottomLeft}${this.style.horizontal.repeat(this.length)}${this.style.bottomRight}`));
+        console.log(this.color(
+            `${this.style.bottomLeft}${this.style.horizontal.repeat(this.length)}${this.style.bottomRight}`
+        ));
     }
 
     divider() {
-        console.log(this.color(`${this.style.centerLeft}${this.style.horizontal.repeat(this.length)}${this.style.centerRight}`));
+        console.log(this.color(
+            `${this.style.centerLeft}${this.style.horizontal.repeat(this.length)}${this.style.centerRight}`
+        ));
     }
 
     empty() {
-        console.log(this.color(`${this.style.vertical}${this.style.empty.repeat(this.length)}${this.style.vertical}`));
+        console.log(this.color(
+            `${this.style.vertical}${this.style.empty.repeat(this.length)}${this.style.vertical}`
+        ));
     }
 
     text(string, textColor = this.color) {
@@ -73,9 +80,10 @@ class Print {
         });
 
         if (textPaddingX === null) {
+            const outlinesVertical = 2;
             const maxLength = lines.reduce((max, line) => Math.max(max, line.length), 1);
-            textPaddingX = ((this.length + 1) - maxLength) * 0.5;
-        }
+            textPaddingX = Math.ceil(((this.length + outlinesVertical) - maxLength) * 0.5);
+         }
 
         const colorValues = Object.values(this.gradient);
         const repeatedColors = [...colorValues, ...colorValues.reverse()];
@@ -93,6 +101,4 @@ class Print {
     }
 }
 
-const print = new Print(88, 4, chalk.whiteBright, 'rounded', orangeColors);
 
-export {print};
