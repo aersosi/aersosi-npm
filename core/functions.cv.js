@@ -1,28 +1,28 @@
 import inquirer from "inquirer";
 import stripAnsi from "strip-ansi";
+import chalk from "chalk";
 import path from "path";
 import fs from "fs";
 
 import {Print} from "./functions.print.js";
-import {colorsChalk, orangeColors} from "./config.colors.js";
+import {clearConsole, log} from "./functions.helper.js";
+import {cvConfig} from "./config.cv.js";
+import {colorsChalk} from "./config.colors.js";
 import {manuBackExitOptions, manuIndexOptions} from "./config.menu.js";
-import chalk from "chalk";
 
 const resumePath = path.resolve('./data/data.resume.json');
 const resume = JSON.parse(fs.readFileSync(resumePath, 'utf8'));
 
-const clearConsole = () => process.stdout.write('\x1Bc'); // Reliable Clear Console Escape Sequence
-
 export class CV {
     constructor() {
-        this.print = new Print(88, 4, chalk.whiteBright, 'rounded', orangeColors);
+        this.print = new Print(cvConfig);
         this.resume = resume;
     }
 
     async handleNarrowConsole() {
         const consoleWidth = process.stdout.columns;
 
-        if (consoleWidth < 88) {
+        if (consoleWidth < cvConfig.boxWidth) {
             await this.checkConsoleWidth();
         } else {
             await this.menuIndex();
@@ -35,10 +35,10 @@ export class CV {
             const newConsoleWidth = process.stdout.columns;
 
             clearConsole();
-            if (newConsoleWidth < 88) {
-                console.log(chalk.red('Please increase width of terminal window.'));
+            if (newConsoleWidth < cvConfig.boxWidth) {
+                log(chalk.red('Please increase width of terminal window.'));
             } else {
-                console.log(chalk.green('Thank you. Continuing now with the CV. :)'));
+                log(chalk.green('Thank you. Continuing now with the CV. :)'));
                 clearInterval(intervalCheckWidth);
 
                 setTimeout(() => {
@@ -53,8 +53,8 @@ export class CV {
         clearConsole();
 
         this.print.titleASCII('Index', 2);
-        console.log(colorsChalk.orange5('  Hello, my name is Arthur Ersosi. Welcome to my resume!'));
-        console.log(''); // empty line
+        log(colorsChalk.orange5('  Hello, my name is Arthur Ersosi. Welcome to my resume!'));
+        log(''); // empty row
 
         process.stdin.setMaxListeners(20);
 
@@ -81,7 +81,7 @@ export class CV {
     }
 
     async menuBackExit() {
-        console.log(''); // empty line
+        log(''); // empty row
 
         try {
             const choice = await inquirer.prompt(manuBackExitOptions);
@@ -113,9 +113,9 @@ export class CV {
         data.forEach((info, index) => {
             const formattingFunctions = {
                 emptyLine: () => this.print.empty(),
-                title: value => console.log(this.print.text(`${value.toUpperCase()}`, colorsChalk.orange5.bold)),
-                subtitle: value => console.log(this.print.text(`${value}`, colorsChalk.white)),
-                body: value => console.log(this.print.text(`${value}`, colorsChalk.white.italic)),
+                title: value => log(this.print.text(`${value.toUpperCase()}`, colorsChalk.orange5.bold)),
+                subtitle: value => log(this.print.text(`${value}`, colorsChalk.white)),
+                body: value => log(this.print.text(`${value}`, colorsChalk.white.italic)),
             };
 
             Object.entries(info).forEach(([key, value]) => {

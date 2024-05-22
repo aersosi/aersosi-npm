@@ -4,57 +4,63 @@ import chalk from 'chalk';
 import figlet from 'figlet';
 
 import {ASCIIart} from '../data/data.ASCIIart.js';
+import {log} from "./functions.helper.js";
 
-const outlineElementsPath = path.resolve('./core/config.outlines.json');
+const outlineElementsPath = path.resolve('./data/data.outlines.json');
 const outlineElements = JSON.parse(fs.readFileSync(outlineElementsPath, 'utf8'));
 
 export class Print {
-    constructor(
-        boxWidth = 70,
-        textPaddingX = 5,
-        outlineColor = chalk.whiteBright,
-        outlineStyle = 'rounded',
-        gradient = {
-            1: '#ffffff',
-            2: '#cccccc',
-            3: '#999999',
-            4: '#666666',
-            5: '#333333',
-            6: '',
-        }
-    ) {
-        this.length = boxWidth - 2;
-        this.color = outlineColor;
+    outlinesVertical = 2;
+
+    constructor(options = {}) {
+        const {
+            boxWidth = 80,
+            textPaddingX = 4,
+            outlineColor = chalk.whiteBright,
+            textColor = chalk.whiteBright,
+            outlineStyle = 'rounded',
+            gradient = {
+                1: '#ffffff',
+                2: '#cccccc',
+                3: '#999999',
+                4: '#666666',
+                5: '#333333',
+                6: '',
+            },
+        } = options;
+        this.length = boxWidth - this.outlinesVertical;
+        this.outlineColor = outlineColor;
+        this.textColor = textColor;
         this.textPaddingX = textPaddingX;
         this.style = outlineElements[outlineStyle];
         this.gradient = gradient;
     }
 
     top() {
-        console.log(this.color(
+        log(this.outlineColor(
             `${this.style.topLeft}${this.style.horizontal.repeat(this.length)}${this.style.topRight}`
         ));
     }
 
     bottom() {
-        console.log(this.color(
+        log(this.outlineColor(
             `${this.style.bottomLeft}${this.style.horizontal.repeat(this.length)}${this.style.bottomRight}`
         ));
     }
 
     divider() {
-        console.log(this.color(
+        log(this.outlineColor(
             `${this.style.centerLeft}${this.style.horizontal.repeat(this.length)}${this.style.centerRight}`
         ));
     }
 
     empty() {
-        console.log(this.color(
+        log(this.outlineColor(
             `${this.style.vertical}${this.style.empty.repeat(this.length)}${this.style.vertical}`
         ));
     }
 
-    text(string, textColor = this.color) {
+    text(string, textColor = this.textColor) {
         const ellipsis = '...';
         let stringSanitized;
 
@@ -65,7 +71,7 @@ export class Print {
         }
 
         const rowContent = ' '.repeat(this.textPaddingX) + stringSanitized + ' '.repeat(this.textPaddingX);
-        return `${this.color(this.style.vertical)}${textColor(rowContent)}${this.color(this.style.vertical)}`;
+        return `${this.outlineColor(this.style.vertical)}${textColor(rowContent)}${this.outlineColor(this.style.vertical)}`;
     }
 
     titleASCII(string = 'test', textPaddingX = null) {
@@ -80,10 +86,9 @@ export class Print {
         });
 
         if (textPaddingX === null) {
-            const outlinesVertical = 2;
             const maxLength = lines.reduce((max, line) => Math.max(max, line.length), 1);
-            textPaddingX = Math.ceil(((this.length + outlinesVertical) - maxLength) * 0.5);
-         }
+            textPaddingX = Math.ceil(((this.length + this.outlinesVertical) - maxLength) * 0.5);
+        }
 
         const colorValues = Object.values(this.gradient);
         const repeatedColors = [...colorValues, ...colorValues.reverse()];
@@ -93,7 +98,7 @@ export class Print {
             return chalk.hex(color)(`${' '.repeat(textPaddingX)}${line}`);
         });
 
-        console.log(`\n${coloredLines.join('\n')}`);
+        log(`\n${coloredLines.join('\n')}`);
     }
 
     faceASCII() {
