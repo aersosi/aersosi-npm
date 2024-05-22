@@ -10,8 +10,8 @@ import chalk from "chalk";
 
 const resumePath = path.resolve('./data/data.resume.json');
 const resume = JSON.parse(fs.readFileSync(resumePath, 'utf8'));
-const consoleWidth = process.stdout.columns;
 
+const clearConsole = () => process.stdout.write('\x1Bc'); // Reliable Clear Console Escape Sequence
 
 export class CV {
     constructor() {
@@ -19,15 +19,38 @@ export class CV {
         this.resume = resume;
     }
 
-    // Reliable Clear Console Escape Sequence
-    clearConsole() {
-        process.stdout.write('\x1Bc');
+    async handleNarrowConsole() {
+        const consoleWidth = process.stdout.columns;
+
+        if (consoleWidth < 88) {
+            await this.checkConsoleWidth();
+        } else {
+            await this.menuIndex();
+        }
     }
 
-    async menuIndex() {
-        this.clearConsole();
+    async checkConsoleWidth() {
 
-        // console.log('Terminal size: ' + process.stdout.columns + 'x' + process.stdout.rows);
+        const intervalCheckWidth = setInterval(() => {
+            const newConsoleWidth = process.stdout.columns;
+
+            clearConsole();
+            if (newConsoleWidth < 88) {
+                console.log(chalk.red('Please increase width of terminal window.'));
+            } else {
+                console.log(chalk.green('Thank you. Continuing now with the CV. :)'));
+                clearInterval(intervalCheckWidth);
+
+                setTimeout(() => {
+                    this.menuIndex();
+                }, 2000);
+            }
+        }, 200);
+    }
+
+
+    async menuIndex() {
+        clearConsole();
 
         this.print.titleASCII('Index', 2);
         console.log(colorsChalk.orange5('  Hello, my name is Arthur Ersosi. Welcome to my resume!'));
@@ -40,15 +63,15 @@ export class CV {
             const cleanOption = stripAnsi(answer.resumeOptions);
 
             if (cleanOption === 'About Me') {
-                this.clearConsole();
+                clearConsole();
                 this.print.titleASCII('About Me');
                 this.print.faceASCII();
 
                 await this.menuBackExit();
             } else if (cleanOption === 'Exit') {
-                this.clearConsole();
+                clearConsole();
             } else {
-                this.clearConsole();
+                clearConsole();
                 await this.showResumePage(cleanOption);
                 await this.menuBackExit();
             }
@@ -65,10 +88,10 @@ export class CV {
             const cleanOption = stripAnsi(choice.menuBack);
 
             if (cleanOption === 'Back') {
-                this.clearConsole();
+                clearConsole();
                 await this.menuIndex();
             } else {
-                this.clearConsole();
+                clearConsole();
             }
         } catch (error) {
             console.error('Error in menuBackExit:', error);

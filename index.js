@@ -2,4 +2,4 @@
 
 import {CV} from './core/functions.cv.js';
 
-new CV().menuIndex();
+new CV().handleNarrowConsole();
