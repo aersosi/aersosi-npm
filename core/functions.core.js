@@ -4,11 +4,11 @@ import chalk from "chalk";
 import path from "path";
 import fs from "fs";
 
-import {Print} from "./functions.print.js";
-import {clearConsole, log} from "./functions.helper.js";
-import {colorsTheme} from "../config/config.colors.js";
-import {menuBackExitOptions, menuIndexOptions} from "../config/config.menu.js";
-import {additionalSectionEnable, additionalSectionName} from "../config/config.additionalSection.js";
+import { Print } from "./functions.print.js";
+import { clearConsole, log } from "./functions.helper.js";
+import { colorsTheme } from "../config/config.colors.js";
+import { menuBackExitOptions, menuIndexOptions } from "../config/config.menu.js";
+import { additionalSectionEnable, additionalSectionName } from "../config/config.additionalSection.js";
 
 const resumePath = path.resolve('./data/data.resume.json');
 const resume = JSON.parse(fs.readFileSync(resumePath, 'utf8'));
@@ -32,11 +32,11 @@ const defaultCvStyles = {
     bodyStyle: chalk.whiteBright.italic,
 };
 
-let customCvStyles;
+let customCvStyles = {};
 try {
     customCvStyles = (await import("../config/config.cv.js")).customCvStyles;
 } catch (e) {
-    customCvStyles = {};
+    console.log("Custom CV styles not found, using default styles.");
 }
 
 export class Core {
@@ -130,7 +130,7 @@ export class Core {
 
     async showCvPageContent(option) {
         if (!this.resume.hasOwnProperty(option)) {
-            console.error('Error: Missing or invalid data for ' + option);
+            console.error('Error: Missing or invalid default for ' + option);
             return;
         }
 

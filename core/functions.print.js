@@ -5,7 +5,7 @@ import figlet from 'figlet';
 import { log } from "./functions.helper.js";
 import {AdditionalSectionContent} from "../config/config.additionalSection.js";
 
-const outlineElementsPath = path.resolve('./data/data.outlines.json');
+const outlineElementsPath = path.resolve('./default/data.outlines.json');
 const outlineElements = JSON.parse(fs.readFileSync(outlineElementsPath, 'utf8'));
 
 export class Print {

@@ -3,7 +3,7 @@ import path from "path";
 import fs from "fs";
 import {additionalSectionEnable, additionalSectionName} from "./config.additionalSection.js";
 
-const resumePath = path.resolve('./data/data.resume.json');
+const resumePath = path.resolve('./default/data.resume.json');
 const resume = JSON.parse(fs.readFileSync(resumePath, 'utf8'));
 export const menuIndexOptions = {
     type: 'list',

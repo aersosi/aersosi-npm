@@ -1,6 +1,6 @@
 import chalk from "chalk";
 
-export const orangeGradient = {
+export const orangeShades = {
     1: '#ffff33',
     2: '#ffbf00',
     3: '#ff9500',
@@ -10,7 +10,7 @@ export const orangeGradient = {
 };
 
 const shadesChalk = {};
-Object.entries(orangeGradient).forEach(([key, value]) => {
+Object.entries(orangeShades).forEach(([key, value]) => {
     shadesChalk['shade'+key] = chalk.hex(value);
 });
 export const colorsTheme = {
