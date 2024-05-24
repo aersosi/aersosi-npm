@@ -1,33 +1,28 @@
-import inquirer from "inquirer";
-import stripAnsi from "strip-ansi";
-import chalk from "chalk";
+import inquirer from 'inquirer';
+import stripAnsi from 'strip-ansi';
+import chalk from 'chalk';
 
-import { Print } from "./functions.print.js";
-import {
-  clearConsole,
-  importConfig,
-  log,
-  importExtraSectionConfig,
-} from "./functions.helper.js";
+import { Print } from './functions.print.js';
+import { clearConsole, importConfig, log, importExtraSectionConfig } from './functions.helper.js';
 
-import { defaultCvContent } from "../private/default.cvContent.js";
-import { defaultCvStyles } from "../private/default.cvStyles.js";
-import defaultMenuConfig from "../private/default.inquirerMenu.js";
+import { defaultCvContent } from '../private/default.cvContent.js';
+import { defaultCvStyles } from '../private/default.cvStyles.js';
+import defaultMenuConfig from '../private/default.inquirerMenu.js';
 
 const configCvStyles = await importConfig(
   defaultCvStyles,
-  "../config/config.cvStyles.js",
-  "Custom CV styles not found, using default styles.",
+  '../config/config.cvStyles.js',
+  'Custom CV styles not found, using default styles.',
 );
 const configCvContent = await importConfig(
   defaultCvContent,
-  "../config/config.cvContent.js",
-  "Custom CV content not found, using default content.",
+  '../config/config.cvContent.js',
+  'Custom CV content not found, using default content.',
 );
 const menuConfig = await importConfig(
   defaultMenuConfig,
-  "../config/config.inquirerMenu.js",
-  "Custom menu config not found, using default config.",
+  '../config/config.inquirerMenu.js',
+  'Custom menu config not found, using default config.',
 );
 const extraSectionConfig = await importExtraSectionConfig();
 
@@ -41,9 +36,7 @@ export class Core {
     this.subtitleAsciiText = menuConfig.subtitleAsciiText;
     this.subtitleAsciiColor = menuConfig.subtitleAsciiColor;
     this.extraSectionName = extraSectionConfig ? extraSectionConfig.name : null;
-    this.extraSectionContent = extraSectionConfig
-      ? extraSectionConfig.content
-      : null;
+    this.extraSectionContent = extraSectionConfig ? extraSectionConfig.content : null;
   }
 
   async handleNarrowConsole(option = this.menuIndex.bind(this)) {
@@ -62,7 +55,7 @@ export class Core {
 
       clearConsole();
       if (newConsoleWidth < this.cvStyles.maxCvWidth) {
-        log(chalk.red("Please increase the width of the terminal window."));
+        log(chalk.red('Please increase the width of the terminal window.'));
       } else {
         clearInterval(intervalCheckWidth);
         setTimeout(option, 1000);
@@ -75,12 +68,10 @@ export class Core {
 
     this.print.titleAscii(this.titleAsciiText, this.titleAsciiPadding);
     log(this.subtitleAsciiColor(this.subtitleAsciiText));
-    log(""); // empty row
+    log(''); // empty row
 
     try {
-      const { resumeOptions } = await inquirer.prompt(
-        menuConfig.menuIndexOptions,
-      );
+      const { resumeOptions } = await inquirer.prompt(menuConfig.menuIndexOptions);
       const cleanOption = stripAnsi(resumeOptions);
 
       if (this.extraSectionName && cleanOption === this.extraSectionName) {
@@ -89,7 +80,7 @@ export class Core {
         this.print.extraSectionContent(this.extraSectionContent);
 
         await this.menuBackExit();
-      } else if (cleanOption === "Exit") {
+      } else if (cleanOption === 'Exit') {
         clearConsole();
       } else {
         clearConsole();
@@ -97,27 +88,25 @@ export class Core {
         await this.menuBackExit();
       }
     } catch (error) {
-      console.error("Error in menuIndex:", error);
+      console.error('Error in menuIndex:', error);
     }
   }
 
   async menuBackExit() {
-    log(""); // empty row
+    log(''); // empty row
 
     try {
-      const { menuBack } = await inquirer.prompt(
-        menuConfig.menuBackExitOptions,
-      );
+      const { menuBack } = await inquirer.prompt(menuConfig.menuBackExitOptions);
       const cleanOption = stripAnsi(menuBack);
 
-      if (cleanOption === "Back") {
+      if (cleanOption === 'Back') {
         clearConsole();
         await this.menuIndex();
       } else {
         clearConsole();
       }
     } catch (error) {
-      console.error("Error in menuBackExit:", error);
+      console.error('Error in menuBackExit:', error);
     }
   }
 
@@ -126,8 +115,8 @@ export class Core {
   }
 
   async showCvPageContent(option) {
-    if (!this.cvContent.hasOwnProperty(option)) {
-      console.error("Error: Missing or invalid data for " + option);
+    if (!Object.prototype.hasOwnProperty.call(this.cvContent, option)) {
+      console.error('Error: Missing or invalid data for ' + option);
       return;
     }
 
@@ -140,19 +129,13 @@ export class Core {
     data.forEach((info, index) => {
       const formattingFunctions = {
         emptyLine: () => this.print.empty(),
-        title: (value) =>
-          log(
-            this.print.text(`${value.toUpperCase()}`, this.cvStyles.titleStyle),
-          ),
-        subtitle: (value) =>
-          log(this.print.text(`${value}`, this.cvStyles.subTitleStyle)),
-        body: (value) =>
-          log(this.print.text(`${value}`, this.cvStyles.bodyStyle)),
+        title: value => log(this.print.text(`${value.toUpperCase()}`, this.cvStyles.titleStyle)),
+        subtitle: value => log(this.print.text(`${value}`, this.cvStyles.subTitleStyle)),
+        body: value => log(this.print.text(`${value}`, this.cvStyles.bodyStyle)),
       };
 
       Object.entries(info).forEach(([key, value]) => {
-        const formatFunction =
-          formattingFunctions[key] || formattingFunctions.body;
+        const formatFunction = formattingFunctions[key] || formattingFunctions.body;
         formatFunction(value);
       });
 
