@@ -1,5 +1,5 @@
 import chalk from "chalk";
-import {orangeShades} from "./config.colors.js";
+import {orangeShades} from "./config.themeColors.js";
 
 export const additionalSectionEnable = true;
 export const additionalSectionName = "About Me";

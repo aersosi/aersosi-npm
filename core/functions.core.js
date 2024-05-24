@@ -1,50 +1,36 @@
 import inquirer from "inquirer";
 import stripAnsi from "strip-ansi";
 import chalk from "chalk";
-import path from "path";
-import fs from "fs";
 
 import { Print } from "./functions.print.js";
 import { clearConsole, log } from "./functions.helper.js";
-import { colorsTheme } from "../config/config.colors.js";
-import { menuBackExitOptions, menuIndexOptions } from "../config/config.menu.js";
+import { themeColors } from "../config/config.themeColors.js";
+import { menuBackExitOptions, menuIndexOptions } from "../config/config.inquirerMenu.js";
 import { additionalSectionEnable, additionalSectionName } from "../config/config.additionalSection.js";
 
-const resumePath = path.resolve('./data/data.resume.json');
-const resume = JSON.parse(fs.readFileSync(resumePath, 'utf8'));
+import { defaultCvContent } from './default.CvContent.js';
+import { defaultCvStyles } from './default.CvStyles.js';
 
-const defaultCvStyles = {
-    maxCvWidth: 80,
-    textPaddingX: 4,
-    outlineColor: chalk.whiteBright,
-    textColor: chalk.whiteBright,
-    outlineStyle: 'rounded',
-    titleAsciiShades: {
-        1: '#ffffff',
-        2: '#cccccc',
-        3: '#999999',
-        4: '#666666',
-        5: '#333333',
-        6: '',
-    },
-    titleStyle: chalk.whiteBright.bold,
-    subTitleStyle: chalk.whiteBright,
-    bodyStyle: chalk.whiteBright.italic,
-};
-
-let customCvStyles = {};
-try {
-    customCvStyles = (await import("../config/config.cv.js")).customCvStyles;
-} catch (e) {
-    console.log("Custom CV styles not found, using default styles.");
+async function importConfig(modulePath, defaultModule, errorMessage) {
+    try {
+        const module = await import(modulePath);
+        return module[Object.keys(module)[0]]; // Assumes default export
+    } catch (e) {
+        console.log(errorMessage);
+        return defaultModule;
+    }
 }
+
+const configCvStyles = await importConfig("../config/config.cvStyles.js", defaultCvStyles, "Custom CV styles not found, using default styles.");
+const configCvContent = await importConfig("../config/config.cvContent.js", defaultCvContent, "Custom CV content not found, using default content.");
 
 export class Core {
     constructor() {
-        this.cvStyles = { ...defaultCvStyles, ...customCvStyles };
-        this.colorsTheme = colorsTheme;
+        this.cvContent = { ...defaultCvContent, ...configCvContent };
+        this.cvStyles = { ...defaultCvStyles, ...configCvStyles };
+        this.themeColors = themeColors;
         this.print = new Print(this.cvStyles);
-        this.resume = resume;
+
     }
 
     async handleNarrowConsole(option = this.menuIndex.bind(this)) {
@@ -65,28 +51,22 @@ export class Core {
             if (newConsoleWidth < this.cvStyles.maxCvWidth) {
                 log(chalk.red('Please increase the width of the terminal window.'));
             } else {
-                log(chalk.green('Thank you. Continuing now with the CV. :)'));
                 clearInterval(intervalCheckWidth);
-
-                setTimeout(() => {
-                    option();
-                }, 2000);
+                setTimeout(option, 1000);
             }
-        }, 200);
+        }, 250);
     }
 
     async menuIndex() {
         clearConsole();
 
         this.print.titleAscii('Index', 2);
-        log(this.colorsTheme.shade5('  Hello, my name is Arthur Ersosi. Welcome to my resume!'));
+        log(this.themeColors.shade5('  Hello, my name is Arthur Ersosi. Welcome to my resume!'));
         log(''); // empty row
 
-        process.stdin.setMaxListeners(20);
-
         try {
-            const choice = await inquirer.prompt(menuIndexOptions);
-            const cleanOption = stripAnsi(choice.resumeOptions);
+            const { resumeOptions } = await inquirer.prompt(menuIndexOptions);
+            const cleanOption = stripAnsi(resumeOptions);
 
             if (additionalSectionEnable && cleanOption === additionalSectionName) {
                 clearConsole();
@@ -110,8 +90,8 @@ export class Core {
         log(''); // empty row
 
         try {
-            const choice = await inquirer.prompt(menuBackExitOptions);
-            const cleanOption = stripAnsi(choice.menuBack);
+            const { menuBack } = await inquirer.prompt(menuBackExitOptions);
+            const cleanOption = stripAnsi(menuBack);
 
             if (cleanOption === 'Back') {
                 clearConsole();
@@ -129,12 +109,12 @@ export class Core {
     }
 
     async showCvPageContent(option) {
-        if (!this.resume.hasOwnProperty(option)) {
-            console.error('Error: Missing or invalid default for ' + option);
+        if (!this.cvContent.hasOwnProperty(option)) {
+            console.error('Error: Missing or invalid data for ' + option);
             return;
         }
 
-        const data = this.resume[option];
+        const data = this.cvContent[option];
 
         this.print.titleAscii(option);
         this.print.top();

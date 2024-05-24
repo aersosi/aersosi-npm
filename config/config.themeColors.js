@@ -13,7 +13,7 @@ const shadesChalk = {};
 Object.entries(orangeShades).forEach(([key, value]) => {
     shadesChalk['shade'+key] = chalk.hex(value);
 });
-export const colorsTheme = {
+export const themeColors = {
     white: chalk.whiteBright,
     ...shadesChalk
 };

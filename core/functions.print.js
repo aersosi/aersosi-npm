@@ -1,12 +1,8 @@
-import fs from 'fs';
-import path from 'path';
 import chalk from 'chalk';
 import figlet from 'figlet';
-import { log } from "./functions.helper.js";
+import {log} from "./functions.helper.js";
 import {AdditionalSectionContent} from "../config/config.additionalSection.js";
-
-const outlineElementsPath = path.resolve('./default/data.outlines.json');
-const outlineElements = JSON.parse(fs.readFileSync(outlineElementsPath, 'utf8'));
+import {themeOutline} from './default.themeOutline.js';
 
 export class Print {
     outlinesVertical = 2;
@@ -15,7 +11,7 @@ export class Print {
         this.length = cvStyles.maxCvWidth - this.outlinesVertical;
         this.outlineColor = cvStyles.outlineColor;
         this.textPaddingX = cvStyles.textPaddingX;
-        this.style = outlineElements[cvStyles.outlineStyle];
+        this.style = themeOutline[cvStyles.outlineStyle];
         this.titleAsciiShades = cvStyles.titleAsciiShades;
     }
 
