@@ -3,34 +3,28 @@ import stripAnsi from "strip-ansi";
 import chalk from "chalk";
 
 import { Print } from "./functions.print.js";
-import { clearConsole, log } from "./functions.helper.js";
-import { themeColors } from "../config/config.themeColors.js";
-import { menuBackExitOptions, menuIndexOptions } from "../config/config.inquirerMenu.js";
-import { additionalSectionEnable, additionalSectionName } from "../config/config.additionalSection.js";
+import { clearConsole, importConfig, log, importExtraSectionConfig } from "./functions.helper.js";
 
-import { defaultCvContent } from './default.CvContent.js';
-import { defaultCvStyles } from './default.CvStyles.js';
+import { defaultCvContent } from '../private/default.cvContent.js';
+import { defaultCvStyles } from '../private/default.cvStyles.js';
+import defaultMenuConfig from '../private/default.inquirerMenu.js';
 
-async function importConfig(modulePath, defaultModule, errorMessage) {
-    try {
-        const module = await import(modulePath);
-        return module[Object.keys(module)[0]]; // Assumes default export
-    } catch (e) {
-        console.log(errorMessage);
-        return defaultModule;
-    }
-}
-
-const configCvStyles = await importConfig("../config/config.cvStyles.js", defaultCvStyles, "Custom CV styles not found, using default styles.");
-const configCvContent = await importConfig("../config/config.cvContent.js", defaultCvContent, "Custom CV content not found, using default content.");
+const configCvStyles = await importConfig(defaultCvStyles, "../config/config.cvStyles.js", "Custom CV styles not found, using default styles.");
+const configCvContent = await importConfig(defaultCvContent, "../config/config.cvContent.js", "Custom CV content not found, using default content.");
+const menuConfig = await importConfig(defaultMenuConfig, "../config/config.inquirerMenu.js", "Custom menu config not found, using default config.");
+const extraSectionConfig = await importExtraSectionConfig();
 
 export class Core {
     constructor() {
         this.cvContent = { ...defaultCvContent, ...configCvContent };
         this.cvStyles = { ...defaultCvStyles, ...configCvStyles };
-        this.themeColors = themeColors;
         this.print = new Print(this.cvStyles);
-
+        this.titleAsciiText = menuConfig.titleAsciiText;
+        this.titleAsciiPadding = menuConfig.titleAsciiPadding;
+        this.subtitleAsciiText = menuConfig.subtitleAsciiText;
+        this.subtitleAsciiColor = menuConfig.subtitleAsciiColor;
+        this.extraSectionName = extraSectionConfig ? extraSectionConfig.name : null;
+        this.extraSectionContent = extraSectionConfig ? extraSectionConfig.content : null;
     }
 
     async handleNarrowConsole(option = this.menuIndex.bind(this)) {
@@ -60,18 +54,18 @@ export class Core {
     async menuIndex() {
         clearConsole();
 
-        this.print.titleAscii('Index', 2);
-        log(this.themeColors.shade5('  Hello, my name is Arthur Ersosi. Welcome to my resume!'));
+        this.print.titleAscii(this.titleAsciiText, this.titleAsciiPadding);
+        log(this.subtitleAsciiColor(this.subtitleAsciiText));
         log(''); // empty row
 
         try {
-            const { resumeOptions } = await inquirer.prompt(menuIndexOptions);
+            const { resumeOptions } = await inquirer.prompt(menuConfig.menuIndexOptions);
             const cleanOption = stripAnsi(resumeOptions);
 
-            if (additionalSectionEnable && cleanOption === additionalSectionName) {
+            if (this.extraSectionName && cleanOption === this.extraSectionName) {
                 clearConsole();
-                this.print.titleAscii(additionalSectionName);
-                this.print.additionalSectionContent();
+                this.print.titleAscii(this.extraSectionName);
+                this.print.extraSectionContent(this.extraSectionContent);
 
                 await this.menuBackExit();
             } else if (cleanOption === 'Exit') {
@@ -90,7 +84,7 @@ export class Core {
         log(''); // empty row
 
         try {
-            const { menuBack } = await inquirer.prompt(menuBackExitOptions);
+            const { menuBack } = await inquirer.prompt(menuConfig.menuBackExitOptions);
             const cleanOption = stripAnsi(menuBack);
 
             if (cleanOption === 'Back') {

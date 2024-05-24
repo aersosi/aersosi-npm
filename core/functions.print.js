@@ -1,8 +1,14 @@
 import chalk from 'chalk';
 import figlet from 'figlet';
 import {log} from "./functions.helper.js";
-import {AdditionalSectionContent} from "../config/config.additionalSection.js";
-import {themeOutline} from './default.themeOutline.js';
+import {themeOutline} from '../private/default.themeOutline.js';
+
+let ExtraSectionContent;
+try {
+    ExtraSectionContent = require('../config/config.extraSection.js').ExtraSectionContent;
+} catch (e) {
+    console.log("Extra section content not found.");
+}
 
 export class Print {
     outlinesVertical = 2;
@@ -80,7 +86,8 @@ export class Print {
         log(`\n${coloredLines.join('\n')}`);
     }
 
-    additionalSectionContent() {
-        log(AdditionalSectionContent);
-    }
+
+    extraSectionContent(content) {
+            log(content);
+    };
 }

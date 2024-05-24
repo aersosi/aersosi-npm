@@ -1,6 +1,5 @@
-import { themeColors } from './config.themeColors.js';
-import { extraSectionName } from './config.extraSection.js';
-import { defaultCvContent } from '../private/default.cvContent.js';
+import { defaultCvContent } from './default.cvContent.js';
+import chalk from "chalk";
 
 let configCvContent = {};
 try {
@@ -11,37 +10,33 @@ try {
 
 const cvContent = Object.keys(configCvContent).length > 0 ? configCvContent : defaultCvContent;
 
-const menuIndexOptions = {
+export const menuIndexOptions = {
     type: 'list',
     name: 'resumeOptions',
     message: 'What do you want to know about me?',
     choices: [
-        extraSectionName,
         ...Object.keys(cvContent),
-        themeColors.shade5('Exit')
+        'Exit'
     ],
-    loop: false
 };
 
-const menuBackExitOptions = {
+export const menuBackExitOptions = {
     type: 'list',
-    prefix: '',
     name: 'menuBack',
     message: 'Go back or Exit?',
     choices: [
         'Back',
-        themeColors.shade5('Exit')
+        'Exit'
     ],
-    loop: false
 };
 
-const titleAsciiText = 'Index';
-const titleAsciiPadding = 2;
+export const titleAsciiText = 'Index';
+export const titleAsciiPadding = null;
 
-const subtitleAsciiText = '  Hello, my name is Arthur Ersosi. Welcome to my resume!';
-const subtitleAsciiColor = themeColors.shade5;
+export const subtitleAsciiText = 'Welcome to my resume!';
+export const subtitleAsciiColor = chalk.red;
 
-const menuConfig = {
+const defaultMenuConfig = {
     menuIndexOptions,
     menuBackExitOptions,
     titleAsciiText,
@@ -50,4 +45,4 @@ const menuConfig = {
     subtitleAsciiColor
 };
 
-export default menuConfig;
+export default defaultMenuConfig;
