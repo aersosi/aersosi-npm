@@ -1,7 +1,7 @@
-import chalk from "chalk";
-import figlet from "figlet";
-import { log } from "./functions.helper.js";
-import { themeOutline } from "../private/default.themeOutline.js";
+import chalk from 'chalk';
+import figlet from 'figlet';
+import { log } from './functions.helper.js';
+import { themeOutline } from '../private/default.themeOutline.js';
 export class Print {
   outlinesVertical = 2;
 
@@ -39,50 +39,40 @@ export class Print {
 
   empty() {
     log(
-      this.outlineColor(
-        `${this.style.vertical}${" ".repeat(this.length)}${this.style.vertical}`,
-      ),
+      this.outlineColor(`${this.style.vertical}${' '.repeat(this.length)}${this.style.vertical}`),
     );
   }
 
   text(string, bodyStyle) {
-    const ellipsis = "...";
+    const ellipsis = '...';
     let stringSanitized;
 
     if (string.length > this.length - this.textPaddingX * 2) {
       stringSanitized =
-        string.slice(0, this.length - this.textPaddingX * 2 - ellipsis.length) +
-        ellipsis;
+        string.slice(0, this.length - this.textPaddingX * 2 - ellipsis.length) + ellipsis;
     } else {
       stringSanitized = string.padEnd(this.length - this.textPaddingX * 2);
     }
 
     const rowContent =
-      " ".repeat(this.textPaddingX) +
-      stringSanitized +
-      " ".repeat(this.textPaddingX);
+      ' '.repeat(this.textPaddingX) + stringSanitized + ' '.repeat(this.textPaddingX);
     return `${this.outlineColor(this.style.vertical)}${bodyStyle(rowContent)}${this.outlineColor(this.style.vertical)}`;
   }
 
-  titleAscii(string = "test", textPaddingX = null) {
+  titleAscii(string = 'test', textPaddingX = null) {
     const asciiArtText = figlet.textSync(string, {
-      font: "ANSI Regular",
+      font: 'ANSI Regular',
       width: this.length,
       whitespaceBreak: true,
     });
 
-    let lines = asciiArtText.split("\n").filter((line, index, arr) => {
-      return index === arr.length - 1 ? line.trim() !== "" : true;
+    let lines = asciiArtText.split('\n').filter((line, index, arr) => {
+      return index === arr.length - 1 ? line.trim() !== '' : true;
     });
 
     if (textPaddingX === null) {
-      const maxLength = lines.reduce(
-        (max, line) => Math.max(max, line.length),
-        1,
-      );
-      textPaddingX = Math.ceil(
-        (this.length + this.outlinesVertical - maxLength) * 0.5,
-      );
+      const maxLength = lines.reduce((max, line) => Math.max(max, line.length), 1);
+      textPaddingX = Math.ceil((this.length + this.outlinesVertical - maxLength) * 0.5);
     }
 
     const colorValues = Object.values(this.titleAsciiShades);
@@ -90,13 +80,13 @@ export class Print {
 
     const coloredLines = lines.map((line, index) => {
       const color = repeatedColors[index % repeatedColors.length];
-      return chalk.hex(color)(`${" ".repeat(textPaddingX)}${line}`);
+      return chalk.hex(color)(`${' '.repeat(textPaddingX)}${line}`);
     });
 
-    log(`\n${coloredLines.join("\n")}`);
+    log(`\n${coloredLines.join('\n')}`);
   }
 
-  extraSectionContent(content) {
+  extraPageContent(content) {
     log(content);
   }
 }

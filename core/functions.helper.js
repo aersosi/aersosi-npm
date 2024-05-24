@@ -11,12 +11,12 @@ export async function importConfig(defaultModule, modulePath, errorMessage) {
   }
 }
 
-export async function importExtraSectionConfig() {
+export async function importExtraPageConfig() {
   try {
-    const extraSectionModule = await import('../config/config.extraSection.js');
+    const extraPageModule = await import('../config/config.extraPage.js');
     return {
-      name: extraSectionModule.extraSectionName,
-      content: extraSectionModule.extraSectionContent,
+      name: extraPageModule.extraPageName,
+      content: extraPageModule.extraPageContent,
     };
   } catch {
     console.log('Extra section config not found.');

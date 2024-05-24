@@ -3,7 +3,7 @@ import stripAnsi from 'strip-ansi';
 import chalk from 'chalk';
 
 import { Print } from './functions.print.js';
-import { clearConsole, importConfig, log, importExtraSectionConfig } from './functions.helper.js';
+import { clearConsole, importConfig, log, importExtraPageConfig } from './functions.helper.js';
 
 import { defaultCvContent } from '../private/default.cvContent.js';
 import { defaultCvStyles } from '../private/default.cvStyles.js';
@@ -24,7 +24,7 @@ const menuConfig = await importConfig(
   '../config/config.inquirerMenu.js',
   'Custom menu config not found, using default config.',
 );
-const extraSectionConfig = await importExtraSectionConfig();
+const extraPageConfig = await importExtraPageConfig();
 
 export class Core {
   constructor() {
@@ -35,8 +35,8 @@ export class Core {
     this.titleAsciiPadding = menuConfig.titleAsciiPadding;
     this.subtitleAsciiText = menuConfig.subtitleAsciiText;
     this.subtitleAsciiColor = menuConfig.subtitleAsciiColor;
-    this.extraSectionName = extraSectionConfig ? extraSectionConfig.name : null;
-    this.extraSectionContent = extraSectionConfig ? extraSectionConfig.content : null;
+    this.extraPageName = extraPageConfig ? extraPageConfig.name : null;
+    this.extraPageContent = extraPageConfig ? extraPageConfig.content : null;
   }
 
   async handleNarrowConsole(option = this.menuIndex.bind(this)) {
@@ -74,12 +74,8 @@ export class Core {
       const { resumeOptions } = await inquirer.prompt(menuConfig.menuIndexOptions);
       const cleanOption = stripAnsi(resumeOptions);
 
-      if (this.extraSectionName && cleanOption === this.extraSectionName) {
-        clearConsole();
-        this.print.titleAscii(this.extraSectionName);
-        this.print.extraSectionContent(this.extraSectionContent);
-
-        await this.menuBackExit();
+      if (this.extraPageName && cleanOption === this.extraPageName) {
+        await this.showExtraPage();
       } else if (cleanOption === 'Exit') {
         clearConsole();
       } else {
@@ -148,5 +144,16 @@ export class Core {
 
     this.print.empty();
     this.print.bottom();
+  }
+
+  async showExtraPage() {
+    await this.handleNarrowConsole(this.showExtraPageContent.bind(this));
+  }
+
+  async showExtraPageContent() {
+    clearConsole();
+    this.print.titleAscii(this.extraPageName);
+    this.print.extraPageContent(this.extraPageContent);
+    await this.menuBackExit();
   }
 }

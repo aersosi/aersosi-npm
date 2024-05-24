@@ -1,5 +1,5 @@
 import { defaultCvContent } from './default.cvContent.js';
-import chalk from 'chalk';
+import { themeColors } from './default.themeColors.js';
 
 let configCvContent = {};
 try {
@@ -28,7 +28,7 @@ export const titleAsciiText = 'Index';
 export const titleAsciiPadding = null;
 
 export const subtitleAsciiText = 'Welcome to my resume!';
-export const subtitleAsciiColor = chalk.red;
+export const subtitleAsciiColor = themeColors.shade3;
 
 const defaultMenuConfig = {
   menuIndexOptions,

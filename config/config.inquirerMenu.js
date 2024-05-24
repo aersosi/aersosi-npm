@@ -1,5 +1,5 @@
 import { themeColors } from './config.themeColors.js';
-import { extraSectionName } from './config.extraSection.js';
+import { extraPageName } from './config.extraPage.js';
 import { defaultCvContent } from '../private/default.cvContent.js';
 
 let configCvContent = {};
@@ -15,7 +15,7 @@ const menuIndexOptions = {
   type: 'list',
   name: 'resumeOptions',
   message: 'What do you want to know about me?',
-  choices: [extraSectionName, ...Object.keys(cvContent), themeColors.shade5('Exit')],
+  choices: [extraPageName, ...Object.keys(cvContent), themeColors.shade5('Exit')],
   loop: false,
 };
 
