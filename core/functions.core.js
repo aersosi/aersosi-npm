@@ -1,9 +1,14 @@
 import inquirer from 'inquirer';
 import stripAnsi from 'strip-ansi';
-import chalk from 'chalk';
 
 import { Print } from './functions.print.js';
-import { clearConsole, importConfig, log, importExtraPageConfig } from './functions.helper.js';
+import {
+  clearConsole,
+  importConfig,
+  log,
+  importExtraPageConfig,
+  handleNarrowConsole,
+} from './functions.helper.js';
 
 import { defaultCvContent } from '../private/default.cvContent.js';
 import { defaultCvStyles } from '../private/default.cvStyles.js';
@@ -37,30 +42,6 @@ export class Core {
     this.subtitleAsciiColor = menuConfig.subtitleAsciiColor;
     this.extraPageName = extraPageConfig ? extraPageConfig.name : null;
     this.extraPageContent = extraPageConfig ? extraPageConfig.content : null;
-  }
-
-  async handleNarrowConsole(option = this.menuIndex.bind(this)) {
-    const consoleWidth = process.stdout.columns;
-
-    if (consoleWidth < this.cvStyles.maxCvWidth) {
-      await this.checkConsoleWidth(option);
-    } else {
-      await option();
-    }
-  }
-
-  async checkConsoleWidth(option) {
-    const intervalCheckWidth = setInterval(() => {
-      const newConsoleWidth = process.stdout.columns;
-
-      clearConsole();
-      if (newConsoleWidth < this.cvStyles.maxCvWidth) {
-        log(chalk.red('Please increase the width of the terminal window.'));
-      } else {
-        clearInterval(intervalCheckWidth);
-        setTimeout(option, 1000);
-      }
-    }, 250);
   }
 
   async menuIndex() {
@@ -106,11 +87,7 @@ export class Core {
     }
   }
 
-  async showCvPage(option) {
-    await this.handleNarrowConsole(this.showCvPageContent.bind(this, option));
-  }
-
-  async showCvPageContent(option) {
+  async cvPage(option) {
     if (!Object.prototype.hasOwnProperty.call(this.cvContent, option)) {
       console.error('Error: Missing or invalid data for ' + option);
       return;
@@ -146,14 +123,22 @@ export class Core {
     this.print.bottom();
   }
 
-  async showExtraPage() {
-    await this.handleNarrowConsole(this.showExtraPageContent.bind(this));
-  }
-
-  async showExtraPageContent() {
+  async extraPage() {
     clearConsole();
     this.print.titleAscii(this.extraPageName);
     this.print.extraPageContent(this.extraPageContent);
     await this.menuBackExit();
+  }
+
+  async showMenuIndex() {
+    await handleNarrowConsole(this.menuIndex.bind(this), this.cvStyles);
+  }
+
+  async showCvPage(option) {
+    await handleNarrowConsole(this.cvPage.bind(this, option), this.cvStyles);
+  }
+
+  async showExtraPage() {
+    await handleNarrowConsole(this.extraPage.bind(this), this.cvStyles);
   }
 }
