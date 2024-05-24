@@ -1,9 +1,12 @@
 import chalk from "chalk";
-import {orangeColors} from "../core/config.colors.js";
+import {orangeGradient} from "./config.colors.js";
 
-const hightlight = (text) => chalk.hex(orangeColors[2]).bold(text);
+export const additionalSectionEnable = true;
+export const additionalSectionName = "About Me";
 
-export const ASCIIart = `
+const hightlight = (text) => chalk.hex(orangeGradient[2]).bold(text);
+
+export const AdditionalSectionContent = `
 ╭──────────────────────────────────────────────────────────────────────────────────────╮
 │                                                                                      │
 │          .-=-_=_-=-.                                                                 │

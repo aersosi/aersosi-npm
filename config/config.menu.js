@@ -1,27 +1,28 @@
-import {colorsChalk} from './config.colors.js';
+import {colorsTheme} from './config.colors.js';
 import path from "path";
 import fs from "fs";
+import {additionalSectionEnable, additionalSectionName} from "./config.additionalSection.js";
 
 const resumePath = path.resolve('./data/data.resume.json');
 const resume = JSON.parse(fs.readFileSync(resumePath, 'utf8'));
-export const manuIndexOptions = {
+export const menuIndexOptions = {
     type: 'list',
     name: 'resumeOptions',
     message: 'What do you want to know about me?',
     choices: [
-        'About Me',
+        ...(additionalSectionEnable ? [additionalSectionName] : ''),
         ...Object.keys(resume),
-        colorsChalk.orange5('Exit')],
+        colorsTheme.shade5('Exit')],
     loop: 'false'
 }
 
-export const manuBackExitOptions = {
+export const menuBackExitOptions = {
     type: 'list',
     prefix: '',
     name: 'menuBack',
     message: 'Go back or Exit?',
     choices: [
         'Back',
-        colorsChalk.orange5('Exit')],
+        colorsTheme.shade5('Exit')],
     loop: 'false'
 }

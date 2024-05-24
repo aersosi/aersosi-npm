@@ -2,9 +2,8 @@ import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
 import figlet from 'figlet';
-
-import {ASCIIart} from '../data/data.ASCIIart.js';
-import {log} from "./functions.helper.js";
+import { log } from "./functions.helper.js";
+import {AdditionalSectionContent} from "../config/config.additionalSection.js";
 
 const outlineElementsPath = path.resolve('./data/data.outlines.json');
 const outlineElements = JSON.parse(fs.readFileSync(outlineElementsPath, 'utf8'));
@@ -12,28 +11,12 @@ const outlineElements = JSON.parse(fs.readFileSync(outlineElementsPath, 'utf8'))
 export class Print {
     outlinesVertical = 2;
 
-    constructor(options = {}) {
-        const {
-            boxWidth = 80,
-            textPaddingX = 4,
-            outlineColor = chalk.whiteBright,
-            textColor = chalk.whiteBright,
-            outlineStyle = 'rounded',
-            gradient = {
-                1: '#ffffff',
-                2: '#cccccc',
-                3: '#999999',
-                4: '#666666',
-                5: '#333333',
-                6: '',
-            },
-        } = options;
-        this.length = boxWidth - this.outlinesVertical;
-        this.outlineColor = outlineColor;
-        this.textColor = textColor;
-        this.textPaddingX = textPaddingX;
-        this.style = outlineElements[outlineStyle];
-        this.gradient = gradient;
+    constructor(cvStyles) {
+        this.length = cvStyles.maxCvWidth - this.outlinesVertical;
+        this.outlineColor = cvStyles.outlineColor;
+        this.textPaddingX = cvStyles.textPaddingX;
+        this.style = outlineElements[cvStyles.outlineStyle];
+        this.titleAsciiShades = cvStyles.titleAsciiShades;
     }
 
     top() {
@@ -56,11 +39,11 @@ export class Print {
 
     empty() {
         log(this.outlineColor(
-            `${this.style.vertical}${this.style.empty.repeat(this.length)}${this.style.vertical}`
+            `${this.style.vertical}${' '.repeat(this.length)}${this.style.vertical}`
         ));
     }
 
-    text(string, textColor = this.textColor) {
+    text(string, bodyStyle) {
         const ellipsis = '...';
         let stringSanitized;
 
@@ -71,17 +54,17 @@ export class Print {
         }
 
         const rowContent = ' '.repeat(this.textPaddingX) + stringSanitized + ' '.repeat(this.textPaddingX);
-        return `${this.outlineColor(this.style.vertical)}${textColor(rowContent)}${this.outlineColor(this.style.vertical)}`;
+        return `${this.outlineColor(this.style.vertical)}${bodyStyle(rowContent)}${this.outlineColor(this.style.vertical)}`;
     }
 
-    titleASCII(string = 'test', textPaddingX = null) {
-        const asciiArt = figlet.textSync(string, {
+    titleAscii(string = 'test', textPaddingX = null) {
+        const asciiArtText = figlet.textSync(string, {
             font: 'ANSI Regular',
             width: this.length,
             whitespaceBreak: true,
         });
 
-        let lines = asciiArt.split('\n').filter((line, index, arr) => {
+        let lines = asciiArtText.split('\n').filter((line, index, arr) => {
             return index === arr.length - 1 ? line.trim() !== '' : true;
         });
 
@@ -90,7 +73,7 @@ export class Print {
             textPaddingX = Math.ceil(((this.length + this.outlinesVertical) - maxLength) * 0.5);
         }
 
-        const colorValues = Object.values(this.gradient);
+        const colorValues = Object.values(this.titleAsciiShades);
         const repeatedColors = [...colorValues, ...colorValues.reverse()];
 
         const coloredLines = lines.map((line, index) => {
@@ -101,9 +84,7 @@ export class Print {
         log(`\n${coloredLines.join('\n')}`);
     }
 
-    faceASCII() {
-        console.log(ASCIIart);
+    additionalSectionContent() {
+        log(AdditionalSectionContent);
     }
 }
-
-

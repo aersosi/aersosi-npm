@@ -1,5 +1,5 @@
 #!/usr/bin/env node
 
-import {CV} from './core/functions.cv.js';
+import {Core} from './core/functions.core.js';
 
-new CV().handleNarrowConsole();
+new Core().handleNarrowConsole();
