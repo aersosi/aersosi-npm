@@ -1,5 +1,5 @@
 import figlet from 'figlet';
-import { cleanAsciiArtText, log, paddedAndColoredRows } from './functions.helper.js';
+import { cleanAsciiArtText, log, paddingColorRows } from './functions.helper.js';
 import { themeOutline } from '../private/default.themeOutline.js';
 export class Print {
   outlinesVertical = 2;
@@ -65,7 +65,7 @@ export class Print {
 
     const cleanLines = cleanAsciiArtText(asciiArtText);
 
-    const processedRows = paddedAndColoredRows(
+    const processedRows = paddingColorRows(
       cleanLines,
       titlePaddingX,
       this.length,
@@ -76,7 +76,7 @@ export class Print {
     log(`\n${processedRows}`);
   }
 
-  extraPageContent(content) {
+  pageExtraContent(content) {
     log(content);
   }
 }

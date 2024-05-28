@@ -1,7 +1,7 @@
 import chalk from 'chalk';
+
 export const clearConsole = () => process.stdout.write('\x1Bc'); // Reliable Console Escape Sequence
 export const log = value => console.log(value); // shorthand
-
 export async function importConfig(defaultModule, modulePath, errorMessage) {
   try {
     const module = await import(modulePath);
@@ -11,20 +11,18 @@ export async function importConfig(defaultModule, modulePath, errorMessage) {
     return defaultModule;
   }
 }
-
 export async function importExtraPageConfig() {
   try {
-    const extraPageModule = await import('../config/config.extraPage.js');
+    const pageExtraModule = await import('../config/config.pageExtra.js');
     return {
-      name: extraPageModule.extraPageName,
-      content: extraPageModule.extraPageContent,
+      name: pageExtraModule.pageExtraName,
+      content: pageExtraModule.pageExtraContent,
     };
   } catch {
     log('Extra page config not found.');
     return null;
   }
 }
-
 export async function handleNarrowConsole(option, cvStyles) {
   const consoleWidth = process.stdout.columns;
 
@@ -34,7 +32,6 @@ export async function handleNarrowConsole(option, cvStyles) {
     await option();
   }
 }
-
 export async function checkConsoleWidth(option, cvStyles) {
   const intervalCheckWidth = setInterval(() => {
     const newConsoleWidth = process.stdout.columns;
@@ -48,10 +45,8 @@ export async function checkConsoleWidth(option, cvStyles) {
     }
   }, 250);
 }
-
-export function cleanAsciiArtText(asciiArtText) {
-  // Clean asciiArtText and push to array
-  let lines = asciiArtText
+function figletStringtoArray(figletString) {
+  return figletString
     .split('\n')
     .reduce((acc, line) => {
       if (line.trim() === '') {
@@ -67,53 +62,42 @@ export function cleanAsciiArtText(asciiArtText) {
       return acc;
     }, [])
     .filter(group => group.length > 0);
-
-  if (lines.length > 2) {
-    throw new Error('Use shorter Title, only two rows allowed');
-  }
-
-  function findMaxCharacterCount(arr) {
-    return arr.map(childArray => {
-      if (!Array.isArray(childArray) || childArray.length === 0) {
-        return 0;
-      }
-      const lineLengths = childArray.map(line => line.length);
-      return Math.max(...lineLengths);
-    });
-  }
-
+}
+function transformLines(lines) {
   let newLines;
 
   if (lines.length > 1) {
     newLines = [
-      { [findMaxCharacterCount([lines[0]])[0]]: lines[0] },
+      { [findLongestLine([lines[0]])[0]]: lines[0] },
       [],
-      { [findMaxCharacterCount([lines[1]])[0]]: lines[1] },
+      { [findLongestLine([lines[1]])[0]]: lines[1] },
       [],
     ];
   } else {
-    newLines = [{ [findMaxCharacterCount([lines[0]])[0]]: lines[0] }, []];
+    newLines = [{ [findLongestLine([lines[0]])[0]]: lines[0] }, []];
   }
 
-  lines = newLines; // Assigning newLines to lines
-
-  const maxLengths = findMaxCharacterCount(lines);
-
-  function padLines(arr, lengths) {
-    return arr.map((obj, index) => {
-      if (Array.isArray(obj) && obj.length === 0) {
-        return obj;
-      }
-      const key = Object.keys(obj)[0];
-      const childArray = obj[key];
-      return { [key]: childArray.map(line => line.padEnd(lengths[index], ' ')) };
-    });
-  }
-
-  return padLines(lines, maxLengths);
+  return newLines;
 }
+function findLongestLine(arr) {
+  return arr.map(childArray => {
+    if (!Array.isArray(childArray) || childArray.length === 0) {
+      return 0;
+    }
+    const lineLengths = childArray.map(line => line.length);
+    return Math.max(...lineLengths);
+  });
+}
+export function cleanAsciiArtText(asciiArtText) {
+  let lines = figletStringtoArray(asciiArtText);
 
-export function paddedAndColoredRows(
+  if (lines.length > 2) {
+    log(chalk.red('Use shorter Title, only two rows allowed.'));
+  }
+
+  return transformLines(lines);
+}
+export function paddingColorRows(
   cleanLines,
   titlePaddingX = null,
   maxCvWidth,

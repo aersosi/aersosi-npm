@@ -13,7 +13,7 @@ const cvContent = Object.keys(configCvContent).length > 0 ? configCvContent : de
 
 export const menuIndexOptions = {
   type: 'list',
-  name: 'resumeOptions',
+  name: 'cvOptions',
   message: 'What do you want to know about me?',
   choices: [...Object.keys(cvContent), 'Exit'],
 };

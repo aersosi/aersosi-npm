@@ -29,7 +29,7 @@ const menuConfig = await importConfig(
   '../config/config.inquirerMenu.js',
   'Custom menu config not found, using default config.',
 );
-const extraPageConfig = await importExtraPageConfig();
+const pageExtraConfig = await importExtraPageConfig();
 
 export class Core {
   constructor() {
@@ -40,8 +40,8 @@ export class Core {
     this.titleAsciiPadding = menuConfig.titleAsciiPadding;
     this.subtitleAsciiText = menuConfig.subtitleAsciiText;
     this.subtitleAsciiColor = menuConfig.subtitleAsciiColor;
-    this.extraPageName = extraPageConfig ? extraPageConfig.name : null;
-    this.extraPageContent = extraPageConfig ? extraPageConfig.content : null;
+    this.pageExtraName = pageExtraConfig ? pageExtraConfig.name : null;
+    this.pageExtraContent = pageExtraConfig ? pageExtraConfig.content : null;
   }
 
   async menuIndex() {
@@ -52,23 +52,22 @@ export class Core {
     log(''); // empty row
 
     try {
-      const { resumeOptions } = await inquirer.prompt(menuConfig.menuIndexOptions);
-      const cleanOption = stripAnsi(resumeOptions);
+      const { cvOptions } = await inquirer.prompt(menuConfig.menuIndexOptions);
+      const cleanOption = stripAnsi(cvOptions);
 
-      if (this.extraPageName && cleanOption === this.extraPageName) {
-        await this.showExtraPage();
+      if (this.pageExtraName && cleanOption === this.pageExtraName) {
+        await this.showPageExtra();
       } else if (cleanOption === 'Exit') {
         clearConsole();
       } else {
         clearConsole();
-        await this.showCvPage(cleanOption);
+        await this.showPageCV(cleanOption);
         await this.menuBackExit();
       }
     } catch (error) {
       console.error('Error in menuIndex:', error);
     }
   }
-
   async menuBackExit() {
     log(''); // empty row
 
@@ -86,8 +85,7 @@ export class Core {
       console.error('Error in menuBackExit:', error);
     }
   }
-
-  async cvPage(option) {
+  async pageCV(option) {
     if (!Object.prototype.hasOwnProperty.call(this.cvContent, option)) {
       console.error('Error: Missing or invalid data for ' + option);
       return;
@@ -122,23 +120,20 @@ export class Core {
     this.print.empty();
     this.print.bottom();
   }
-
-  async extraPage() {
+  async pageExtra() {
     clearConsole();
-    this.print.titleAscii(this.extraPageName);
-    this.print.extraPageContent(this.extraPageContent);
+    this.print.titleAscii(this.pageExtraName);
+    this.print.pageExtraContent(this.pageExtraContent);
     await this.menuBackExit();
   }
 
   async showMenuIndex() {
     await handleNarrowConsole(this.menuIndex.bind(this), this.cvStyles);
   }
-
-  async showCvPage(option) {
-    await handleNarrowConsole(this.cvPage.bind(this, option), this.cvStyles);
+  async showPageCV(option) {
+    await handleNarrowConsole(this.pageCV.bind(this, option), this.cvStyles);
   }
-
-  async showExtraPage() {
-    await handleNarrowConsole(this.extraPage.bind(this), this.cvStyles);
+  async showPageExtra() {
+    await handleNarrowConsole(this.pageExtra.bind(this), this.cvStyles);
   }
 }
