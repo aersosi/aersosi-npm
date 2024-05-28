@@ -1,13 +1,12 @@
-import chalk from 'chalk';
 import figlet from 'figlet';
-import { log } from './functions.helper.js';
+import { cleanAsciiArtText, log, paddedAndColoredRows } from './functions.helper.js';
 import { themeOutline } from '../private/default.themeOutline.js';
 export class Print {
   outlinesVertical = 2;
 
   constructor(cvStyles) {
     this.length = cvStyles.maxCvWidth - this.outlinesVertical;
-    this.outlineColor = cvStyles.outlineColor;
+    this.boxColor = cvStyles.boxColor;
     this.textPaddingX = cvStyles.textPaddingX;
     this.style = themeOutline[cvStyles.outlineStyle];
     this.titleAsciiShades = cvStyles.titleAsciiShades;
@@ -15,7 +14,7 @@ export class Print {
 
   top() {
     log(
-      this.outlineColor(
+      this.boxColor(
         `${this.style.topLeft}${this.style.horizontal.repeat(this.length)}${this.style.topRight}`,
       ),
     );
@@ -23,7 +22,7 @@ export class Print {
 
   bottom() {
     log(
-      this.outlineColor(
+      this.boxColor(
         `${this.style.bottomLeft}${this.style.horizontal.repeat(this.length)}${this.style.bottomRight}`,
       ),
     );
@@ -31,16 +30,14 @@ export class Print {
 
   divider() {
     log(
-      this.outlineColor(
+      this.boxColor(
         `${this.style.centerLeft}${this.style.horizontal.repeat(this.length)}${this.style.centerRight}`,
       ),
     );
   }
 
   empty() {
-    log(
-      this.outlineColor(`${this.style.vertical}${' '.repeat(this.length)}${this.style.vertical}`),
-    );
+    log(this.boxColor(`${this.style.vertical}${' '.repeat(this.length)}${this.style.vertical}`));
   }
 
   text(string, bodyStyle) {
@@ -56,34 +53,27 @@ export class Print {
 
     const rowContent =
       ' '.repeat(this.textPaddingX) + stringSanitized + ' '.repeat(this.textPaddingX);
-    return `${this.outlineColor(this.style.vertical)}${bodyStyle(rowContent)}${this.outlineColor(this.style.vertical)}`;
+    return `${this.boxColor(this.style.vertical)}${bodyStyle(rowContent)}${this.boxColor(this.style.vertical)}`;
   }
 
-  titleAscii(string = 'test', textPaddingX = null) {
+  titleAscii(string = 'test', titlePaddingX = null) {
     const asciiArtText = figlet.textSync(string, {
       font: 'ANSI Regular',
       width: this.length,
       whitespaceBreak: true,
     });
 
-    let lines = asciiArtText.split('\n').filter((line, index, arr) => {
-      return index === arr.length - 1 ? line.trim() !== '' : true;
-    });
+    const cleanLines = cleanAsciiArtText(asciiArtText);
 
-    if (textPaddingX === null) {
-      const maxLength = lines.reduce((max, line) => Math.max(max, line.length), 1);
-      textPaddingX = Math.ceil((this.length + this.outlinesVertical - maxLength) * 0.5);
-    }
+    const processedRows = paddedAndColoredRows(
+      cleanLines,
+      titlePaddingX,
+      this.length,
+      this.outlinesVertical,
+      this.titleAsciiShades,
+    );
 
-    const colorValues = Object.values(this.titleAsciiShades);
-    const repeatedColors = [...colorValues, ...colorValues.reverse()];
-
-    const coloredLines = lines.map((line, index) => {
-      const color = repeatedColors[index % repeatedColors.length];
-      return chalk.hex(color)(`${' '.repeat(textPaddingX)}${line}`);
-    });
-
-    log(`\n${coloredLines.join('\n')}`);
+    log(`\n${processedRows}`);
   }
 
   extraPageContent(content) {

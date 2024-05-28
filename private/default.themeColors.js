@@ -6,7 +6,6 @@ export const shades = {
   3: '#999999',
   4: '#666666',
   5: '#333333',
-  6: '',
 };
 
 const shadesChalk = {};

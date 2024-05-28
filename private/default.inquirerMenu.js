@@ -1,11 +1,12 @@
 import { defaultCvContent } from './default.cvContent.js';
 import { themeColors } from './default.themeColors.js';
+import { log } from '../core/functions.helper.js';
 
 let configCvContent = {};
 try {
   configCvContent = (await import('../config/config.cvContent.js')).configCvContent;
 } catch {
-  console.log('Custom CV content not found, using default content.');
+  log('Custom CV content not found, using default content.');
 }
 
 const cvContent = Object.keys(configCvContent).length > 0 ? configCvContent : defaultCvContent;
