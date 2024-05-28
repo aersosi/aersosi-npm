@@ -40,7 +40,7 @@ export class Print {
     log(this.boxColor(`${this.style.vertical}${' '.repeat(this.length)}${this.style.vertical}`));
   }
 
-  text(string, bodyStyle) {
+  text(string, bodyStyleBox) {
     const ellipsis = '...';
     let stringSanitized;
 
@@ -53,7 +53,7 @@ export class Print {
 
     const rowContent =
       ' '.repeat(this.textPaddingX) + stringSanitized + ' '.repeat(this.textPaddingX);
-    return `${this.boxColor(this.style.vertical)}${bodyStyle(rowContent)}${this.boxColor(this.style.vertical)}`;
+    return `${this.boxColor(this.style.vertical)}${bodyStyleBox(rowContent)}${this.boxColor(this.style.vertical)}`;
   }
 
   titleAscii(string = 'test', titlePaddingX = null) {

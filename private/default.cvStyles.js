@@ -6,7 +6,7 @@ export const defaultCvStyles = {
   boxColor: themeColors.white,
   outlineStyle: 'rounded',
   titleAsciiShades: shades,
-  titleStyle: themeColors.white.bold,
-  subTitleStyle: themeColors.white,
-  bodyStyle: themeColors.white.italic,
+  titleStyleBox: themeColors.white.bold,
+  subTitleStyleBox: themeColors.white,
+  bodyStyleBox: themeColors.white.italic,
 };

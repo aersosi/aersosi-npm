@@ -100,9 +100,9 @@ export class Core {
     data.forEach((info, index) => {
       const formattingFunctions = {
         emptyLine: () => this.print.empty(),
-        title: value => log(this.print.text(`${value.toUpperCase()}`, this.cvStyles.titleStyle)),
-        subtitle: value => log(this.print.text(`${value}`, this.cvStyles.subTitleStyle)),
-        body: value => log(this.print.text(`${value}`, this.cvStyles.bodyStyle)),
+        title: value => log(this.print.text(`${value.toUpperCase()}`, this.cvStyles.titleStyleBox)),
+        subtitle: value => log(this.print.text(`${value}`, this.cvStyles.subTitleStyleBox)),
+        body: value => log(this.print.text(`${value}`, this.cvStyles.bodyStyleBox)),
       };
 
       Object.entries(info).forEach(([key, value]) => {

@@ -8,7 +8,7 @@ export const configCvStyles = {
   boxColor: chalk.whiteBright,
   outlineStyle: 'rounded',
   titleAsciiShades: orangeShades,
-  titleStyle: themeColors.shade5.bold,
-  subTitleStyle: themeColors.white,
-  bodyStyle: themeColors.white.italic,
+  titleStyleBox: themeColors.shade3.bold,
+  subTitleStyleBox: themeColors.white,
+  bodyStyleBox: themeColors.white.italic,
 };
