@@ -62,7 +62,6 @@ export class Core {
       } else {
         clearConsole();
         await this.showPageCV(cleanOption);
-        await this.menuBackExit();
       }
     } catch (error) {
       console.error('Error in menuIndex:', error);
@@ -119,6 +118,8 @@ export class Core {
 
     this.print.empty();
     this.print.bottom();
+
+    await this.menuBackExit();
   }
   async pageExtra() {
     clearConsole();
