@@ -10,28 +10,39 @@ import {
   handleNarrowConsole,
 } from './functions.helper.js';
 
-import { defaultCvContent } from '../private/default.cvContent.js';
-import { defaultCvStyles } from '../private/default.cvStyles.js';
-import defaultMenuConfig from '../private/default.inquirerMenu.js';
+import { defaultCvContent } from '../default/default.cvContent.js';
+import { defaultCvStyles } from '../default/default.cvStyles.js';
+import defaultMenuConfig from '../default/default.inquirerMenu.js';
+import { Core as CoreInterface, CvStyles } from 'functions.d.core.js';
 
 const configCvStyles = await importConfig(
   defaultCvStyles,
-  '../config/config.cvStyles.js',
+  '../config/config.cvStyles.ts',
   'Custom CV styles not found, using default styles.',
 );
 const configCvContent = await importConfig(
   defaultCvContent,
-  '../config/config.cvContent.js',
+  '../config/config.cvContent.ts',
   'Custom CV content not found, using default content.',
 );
 const menuConfig = await importConfig(
   defaultMenuConfig,
-  '../config/config.inquirerMenu.js',
+  '../config/config.inquirerMenu.ts',
   'Custom menu config not found, using default config.',
 );
 const pageExtraConfig = await importExtraPageConfig();
 
-export class Core {
+export class Core implements CoreInterface {
+  cvContent = { ...defaultCvContent, ...configCvContent };
+  cvStyles = { ...defaultCvStyles, ...configCvStyles } as CvStyles;
+  print = new Print(this.cvStyles);
+  titleAsciiText = menuConfig.titleAsciiText;
+  titleAsciiPadding = menuConfig.titleAsciiPadding;
+  subtitleAsciiText = menuConfig.subtitleAsciiText;
+  subtitleAsciiColor = menuConfig.subtitleAsciiColor;
+  pageExtraName = pageExtraConfig ? pageExtraConfig.name : null;
+  pageExtraContent = pageExtraConfig ? pageExtraConfig.content : null;
+
   constructor() {
     this.cvContent = { ...defaultCvContent, ...configCvContent };
     this.cvStyles = { ...defaultCvStyles, ...configCvStyles };
@@ -67,6 +78,7 @@ export class Core {
       console.error('Error in menuIndex:', error);
     }
   }
+
   async menuBackExit() {
     log(''); // empty row
 
@@ -84,7 +96,8 @@ export class Core {
       console.error('Error in menuBackExit:', error);
     }
   }
-  async pageCV(option) {
+
+  async pageCV(option: string) {
     if (!Object.prototype.hasOwnProperty.call(this.cvContent, option)) {
       console.error('Error: Missing or invalid data for ' + option);
       return;
@@ -96,17 +109,20 @@ export class Core {
     this.print.top();
     this.print.empty();
 
-    data.forEach((info, index) => {
+    data.forEach((info: any, index: number) => {
       const formattingFunctions = {
         emptyLine: () => this.print.empty(),
-        title: value => log(this.print.text(`${value.toUpperCase()}`, this.cvStyles.titleStyleBox)),
-        subtitle: value => log(this.print.text(`${value}`, this.cvStyles.subTitleStyleBox)),
-        body: value => log(this.print.text(`${value}`, this.cvStyles.bodyStyleBox)),
+        title: (value: string) =>
+          log(this.print.text(`${value.toUpperCase()}`, this.cvStyles.titleStyleBox)),
+        subtitle: (value: string) =>
+          log(this.print.text(`${value}`, this.cvStyles.subTitleStyleBox)),
+        body: (value: string) => log(this.print.text(`${value}`, this.cvStyles.bodyStyleBox)),
       };
 
       Object.entries(info).forEach(([key, value]) => {
-        const formatFunction = formattingFunctions[key] || formattingFunctions.body;
-        formatFunction(value);
+        const formatFunction =
+          formattingFunctions[key as keyof typeof formattingFunctions] || formattingFunctions.body;
+        formatFunction(value as string);
       });
 
       if (index !== data.length - 1) {
@@ -121,19 +137,26 @@ export class Core {
 
     await this.menuBackExit();
   }
+
   async pageExtra() {
     clearConsole();
-    this.print.titleAscii(this.pageExtraName);
-    this.print.pageExtraContent(this.pageExtraContent);
+    if (this.pageExtraName) {
+      this.print.titleAscii(this.pageExtraName);
+    }
+    if (this.pageExtraContent) {
+      this.print.pageExtraContent(this.pageExtraContent);
+    }
     await this.menuBackExit();
   }
 
   async showMenuIndex() {
     await handleNarrowConsole(this.menuIndex.bind(this), this.cvStyles);
   }
-  async showPageCV(option) {
+
+  async showPageCV(option: string) {
     await handleNarrowConsole(this.pageCV.bind(this, option), this.cvStyles);
   }
+
   async showPageExtra() {
     await handleNarrowConsole(this.pageExtra.bind(this), this.cvStyles);
   }
