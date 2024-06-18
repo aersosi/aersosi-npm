@@ -2,7 +2,9 @@ import { themeColors } from './config.themeColors.js';
 import { shades } from './config.themeColors.js';
 import chalk from 'chalk';
 
-export const configCvStyles = {
+import { ConfigCvStyles } from 'config.d.cvStyles.js';
+
+export const configCvStyles: ConfigCvStyles = {
   maxCvWidth: 88,
   textPaddingX: 4,
   boxColor: chalk.whiteBright,
