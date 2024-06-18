@@ -6,7 +6,7 @@ export const configCvStyles = {
   maxCvWidth: 88,
   textPaddingX: 4,
   boxColor: chalk.whiteBright,
-  outlineStyle: 'rounded',
+  boxStyle: 'rounded',
   titleAsciiShades: orangeShades,
   titleStyleBox: themeColors.shade3.bold,
   subTitleStyleBox: themeColors.white,

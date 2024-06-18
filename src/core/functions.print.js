@@ -1,6 +1,6 @@
 import figlet from 'figlet';
 import { cleanAsciiArtText, log, paddingColorRows } from './functions.helper.js';
-import { themeOutline } from '../default/default.themeOutline.js';
+import { themeBox } from '../default/default.themeBox.js';
 export class Print {
   outlinesVertical = 2;
 
@@ -8,7 +8,7 @@ export class Print {
     this.length = cvStyles.maxCvWidth - this.outlinesVertical;
     this.boxColor = cvStyles.boxColor;
     this.textPaddingX = cvStyles.textPaddingX;
-    this.style = themeOutline[cvStyles.outlineStyle];
+    this.style = themeBox[cvStyles.boxStyle];
     this.titleAsciiShades = cvStyles.titleAsciiShades;
   }
 
