@@ -1,6 +1,6 @@
 import figlet from 'figlet';
 import { cleanAsciiArtText, log, paddingColorRows } from './functions.helper.js';
-import { themeOutline } from '../private/default.themeOutline.js';
+import { themeOutline } from '../default/default.themeOutline.js';
 export class Print {
   outlinesVertical = 2;
 

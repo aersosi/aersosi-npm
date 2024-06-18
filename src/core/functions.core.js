@@ -10,9 +10,9 @@ import {
   handleNarrowConsole,
 } from './functions.helper.js';
 
-import { defaultCvContent } from '../private/default.cvContent.js';
-import { defaultCvStyles } from '../private/default.cvStyles.js';
-import defaultMenuConfig from '../private/default.inquirerMenu.js';
+import { defaultCvContent } from '../default/default.cvContent.js';
+import { defaultCvStyles } from '../default/default.cvStyles.js';
+import defaultMenuConfig from '../default/default.inquirerMenu.js';
 
 const configCvStyles = await importConfig(
   defaultCvStyles,

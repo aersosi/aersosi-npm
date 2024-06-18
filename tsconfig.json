@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "strict": false, // Turn off all strict type-checking options
+    "noImplicitAny": false, // Allow implicit 'any' types
+    "allowJs": true, // Allow JavaScript files to be imported
+    "checkJs": false, // Disable type checking of JavaScript files
+    "target": "ES2020",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "sourceMap": true,
+    "outDir": "./dist",
+    "rootDir": "./src",
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true,
+    "baseUrl": "./src",
+    "paths": {
+      "*": ["types/*"]
+    }
+  },
+  "include": ["./src"],
+  "exclude": ["node_modules", "dist"]
+}
