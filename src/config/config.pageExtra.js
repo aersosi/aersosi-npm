@@ -1,8 +1,8 @@
 import chalk from 'chalk';
-import { orangeShades } from './config.themeColors.js';
+import { shades } from './config.themeColors.js';
 
 export const pageExtraName = 'About Me';
-const hs = text => chalk.hex(orangeShades[3]).bold(text); // highlight style
+const hs = text => chalk.hex(shades[3]).bold(text); // highlight style
 export const pageExtraContent = `
 ╭──────────────────────────────────────────────────────────────────────────────────────╮
 │                                                                                      │

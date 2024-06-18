@@ -1,5 +1,5 @@
 import { themeColors } from './config.themeColors.js';
-import { orangeShades } from './config.themeColors.js';
+import { shades } from './config.themeColors.js';
 import chalk from 'chalk';
 
 export const configCvStyles = {
@@ -7,7 +7,7 @@ export const configCvStyles = {
   textPaddingX: 4,
   boxColor: chalk.whiteBright,
   boxStyle: 'rounded',
-  titleAsciiShades: orangeShades,
+  titleAsciiShades: shades,
   titleStyleBox: themeColors.shade3.bold,
   subTitleStyleBox: themeColors.white,
   bodyStyleBox: themeColors.white.italic,
