@@ -1,4 +1,4 @@
-import inquirer from 'inquirer';
+import inquirer, { QuestionCollection } from 'inquirer';
 import stripAnsi from 'strip-ansi';
 
 import { Print } from './functions.print.js';
@@ -49,7 +49,7 @@ export class Core implements ICore {
     this.cvStyles = { ...defaultCvStyles, ...configCvStyles };
     this.print = new Print(this.cvStyles);
     this.titleAsciiText = menuConfig.titleAsciiText;
-    this.titleAsciiPadding = menuConfig.titleAsciiPadding;
+    this.titleAsciiPadding = menuConfig.titleAsciiPadding ?? 0;
     this.subtitleAsciiText = menuConfig.subtitleAsciiText;
     this.subtitleAsciiColor = menuConfig.subtitleAsciiColor;
     this.pageExtraName = pageExtraConfig ? pageExtraConfig.name : null;
@@ -64,7 +64,9 @@ export class Core implements ICore {
     log(''); // empty row
 
     try {
-      const { cvOptions } = await inquirer.prompt(menuConfig.menuIndexOptions);
+      const { cvOptions } = await inquirer.prompt(
+        menuConfig.menuIndexOptions as QuestionCollection,
+      );
       const cleanOption = stripAnsi(cvOptions);
 
       if (this.pageExtraName && cleanOption === this.pageExtraName) {
@@ -84,7 +86,9 @@ export class Core implements ICore {
     log(''); // empty row
 
     try {
-      const { menuBack } = await inquirer.prompt(menuConfig.menuBackExitOptions);
+      const { menuBack } = await inquirer.prompt(
+        menuConfig.menuBackExitOptions as QuestionCollection,
+      );
       const cleanOption = stripAnsi(menuBack);
 
       if (cleanOption === 'Back') {

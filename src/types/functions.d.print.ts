@@ -20,18 +20,11 @@ export interface BoxStyle {
   empty: string;
 }
 
-export interface ThemeBox {
+export interface BoxTheme {
   [key: string]: BoxStyle;
 }
 
 export interface IPrint {
-  outlinesVertical: number;
-  length: number;
-  boxColor: Chalk;
-  textPaddingX: number;
-  style: BoxStyle;
-  titleAsciiShades: Record<string, string>;
-
   top(): void;
   bottom(): void;
   divider(): void;

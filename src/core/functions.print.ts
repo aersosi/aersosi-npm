@@ -5,7 +5,7 @@ import { CvStyles, BoxStyle, IPrint } from 'functions.d.print.js';
 import { Chalk } from 'chalk';
 
 export class Print implements IPrint {
-  outlinesVertical = 2;
+  outlinesVertical: number = 2;
   length: number;
   boxColor: Chalk;
   textPaddingX: number;

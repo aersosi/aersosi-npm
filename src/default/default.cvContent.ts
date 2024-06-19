@@ -1,4 +1,6 @@
-export const defaultCvContent = {
+import { CvContent } from 'config.d.cvContent.js';
+
+export const defaultCvContent: Record<string, CvContent[]> = {
   Lorem: [
     {
       title: 'Lorem',
