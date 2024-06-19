@@ -1,12 +1,12 @@
 import { themeColors } from './config.themeColors.js';
 import { pageExtraName } from './config.pageExtra.js';
-import { defaultCvContent } from '../private/default.cvContent.js';
+import { defaultCvContent } from '../default/default.cvContent.js';
 import { log } from '../core/functions.helper.js';
 import chalk from 'chalk';
 
 let configCvContent = {};
 try {
-  configCvContent = (await import('../config/config.cvContent.js')).configCvContent;
+  configCvContent = (await import('./config.cvContent.js')).configCvContent;
 } catch {
   log('Custom CV content not found, using default content.');
 }

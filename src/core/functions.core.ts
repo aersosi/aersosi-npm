@@ -1,4 +1,4 @@
-import inquirer from 'inquirer';
+import inquirer, { QuestionCollection } from 'inquirer';
 import stripAnsi from 'strip-ansi';
 
 import { Print } from './functions.print.js';
@@ -9,10 +9,12 @@ import {
   importExtraPageConfig,
   handleNarrowConsole,
 } from './functions.helper.js';
+import { CvStyles, CvContent, ICore } from 'functions.d.core.js';
 
-import { defaultCvContent } from '../private/default.cvContent.js';
-import { defaultCvStyles } from '../private/default.cvStyles.js';
-import defaultMenuConfig from '../private/default.inquirerMenu.js';
+import { defaultCvContent } from '../default/default.cvContent.js';
+import { defaultCvStyles } from '../default/default.cvStyles.js';
+import defaultMenuConfig from '../default/default.inquirerMenu.js';
+import { Chalk } from 'chalk';
 
 const configCvStyles = await importConfig(
   defaultCvStyles,
@@ -31,20 +33,30 @@ const menuConfig = await importConfig(
 );
 const pageExtraConfig = await importExtraPageConfig();
 
-export class Core {
+export class Core implements ICore {
+  cvContent: CvContent;
+  cvStyles: CvStyles;
+  titleAsciiText: string;
+  titleAsciiPadding: number;
+  subtitleAsciiText: string;
+  subtitleAsciiColor: Chalk;
+  pageExtraName: string | null;
+  pageExtraContent: string | null;
+  print: Print;
+
   constructor() {
     this.cvContent = { ...defaultCvContent, ...configCvContent };
     this.cvStyles = { ...defaultCvStyles, ...configCvStyles };
     this.print = new Print(this.cvStyles);
     this.titleAsciiText = menuConfig.titleAsciiText;
-    this.titleAsciiPadding = menuConfig.titleAsciiPadding;
+    this.titleAsciiPadding = menuConfig.titleAsciiPadding ?? 0;
     this.subtitleAsciiText = menuConfig.subtitleAsciiText;
     this.subtitleAsciiColor = menuConfig.subtitleAsciiColor;
     this.pageExtraName = pageExtraConfig ? pageExtraConfig.name : null;
     this.pageExtraContent = pageExtraConfig ? pageExtraConfig.content : null;
   }
 
-  async menuIndex() {
+  async menuIndex(): Promise<void> {
     clearConsole();
 
     this.print.titleAscii(this.titleAsciiText, this.titleAsciiPadding);
@@ -52,7 +64,9 @@ export class Core {
     log(''); // empty row
 
     try {
-      const { cvOptions } = await inquirer.prompt(menuConfig.menuIndexOptions);
+      const { cvOptions } = await inquirer.prompt(
+        menuConfig.menuIndexOptions as QuestionCollection,
+      );
       const cleanOption = stripAnsi(cvOptions);
 
       if (this.pageExtraName && cleanOption === this.pageExtraName) {
@@ -67,11 +81,14 @@ export class Core {
       console.error('Error in menuIndex:', error);
     }
   }
-  async menuBackExit() {
+
+  async menuBackExit(): Promise<void> {
     log(''); // empty row
 
     try {
-      const { menuBack } = await inquirer.prompt(menuConfig.menuBackExitOptions);
+      const { menuBack } = await inquirer.prompt(
+        menuConfig.menuBackExitOptions as QuestionCollection,
+      );
       const cleanOption = stripAnsi(menuBack);
 
       if (cleanOption === 'Back') {
@@ -84,7 +101,8 @@ export class Core {
       console.error('Error in menuBackExit:', error);
     }
   }
-  async pageCV(option) {
+
+  async pageCV(option: string): Promise<void> {
     if (!Object.prototype.hasOwnProperty.call(this.cvContent, option)) {
       console.error('Error: Missing or invalid data for ' + option);
       return;
@@ -99,14 +117,17 @@ export class Core {
     data.forEach((info, index) => {
       const formattingFunctions = {
         emptyLine: () => this.print.empty(),
-        title: value => log(this.print.text(`${value.toUpperCase()}`, this.cvStyles.titleStyleBox)),
-        subtitle: value => log(this.print.text(`${value}`, this.cvStyles.subTitleStyleBox)),
-        body: value => log(this.print.text(`${value}`, this.cvStyles.bodyStyleBox)),
+        title: (value: string) =>
+          log(this.print.text(`${value.toUpperCase()}`, this.cvStyles.titleStyleBox)),
+        subtitle: (value: string) =>
+          log(this.print.text(`${value}`, this.cvStyles.subTitleStyleBox)),
+        body: (value: string) => log(this.print.text(`${value}`, this.cvStyles.bodyStyleBox)),
       };
 
       Object.entries(info).forEach(([key, value]) => {
-        const formatFunction = formattingFunctions[key] || formattingFunctions.body;
-        formatFunction(value);
+        const formatFunction =
+          formattingFunctions[key as keyof typeof formattingFunctions] || formattingFunctions.body;
+        formatFunction(value as string);
       });
 
       if (index !== data.length - 1) {
@@ -121,20 +142,23 @@ export class Core {
 
     await this.menuBackExit();
   }
-  async pageExtra() {
+
+  async pageExtra(): Promise<void> {
     clearConsole();
-    this.print.titleAscii(this.pageExtraName);
-    this.print.pageExtraContent(this.pageExtraContent);
+    this.print.titleAscii(this.pageExtraName || '');
+    this.print.pageExtraContent(this.pageExtraContent || '');
     await this.menuBackExit();
   }
 
-  async showMenuIndex() {
+  async showMenuIndex(): Promise<void> {
     await handleNarrowConsole(this.menuIndex.bind(this), this.cvStyles);
   }
-  async showPageCV(option) {
+
+  async showPageCV(option: string): Promise<void> {
     await handleNarrowConsole(this.pageCV.bind(this, option), this.cvStyles);
   }
-  async showPageExtra() {
+
+  async showPageExtra(): Promise<void> {
     await handleNarrowConsole(this.pageExtra.bind(this), this.cvStyles);
   }
 }

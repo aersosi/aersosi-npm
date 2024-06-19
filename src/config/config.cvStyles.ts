@@ -1,13 +1,15 @@
 import { themeColors } from './config.themeColors.js';
-import { orangeShades } from './config.themeColors.js';
+import { shades } from './config.themeColors.js';
 import chalk from 'chalk';
 
-export const configCvStyles = {
+import { ConfigCvStyles } from 'config.d.cvStyles.js';
+
+export const configCvStyles: ConfigCvStyles = {
   maxCvWidth: 88,
   textPaddingX: 4,
   boxColor: chalk.whiteBright,
-  outlineStyle: 'rounded',
-  titleAsciiShades: orangeShades,
+  boxStyle: 'rounded',
+  titleAsciiShades: shades,
   titleStyleBox: themeColors.shade3.bold,
   subTitleStyleBox: themeColors.white,
   bodyStyleBox: themeColors.white.italic,
