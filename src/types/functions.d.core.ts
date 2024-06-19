@@ -14,15 +14,13 @@ export interface ICore {
   pageExtraContent: string | null;
 }
 
-type CvContent = Record<
-  string,
-  Array<{
+interface CvContent {
+  [key: string]: Array<{
     title?: string;
     subtitle?: string;
     emptyLine?: string;
     body?: string;
-    [key: string]: string | undefined;
-  }>
->;
+  }>;
+}
 
 type CvStyles = typeof defaultCvStyles;

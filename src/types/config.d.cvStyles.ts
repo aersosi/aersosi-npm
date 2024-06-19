@@ -1,10 +1,7 @@
 import { Chalk } from 'chalk';
-export interface ConfigCvStyles {
-  maxCvWidth: number;
-  textPaddingX: number;
-  boxColor: Chalk;
-  boxStyle: string;
-  titleAsciiShades: Record<string, string>;
+import { CvStyles } from 'functions.d.print.js';
+
+export interface ConfigCvStyles extends CvStyles {
   titleStyleBox: Chalk;
   subTitleStyleBox: Chalk;
   bodyStyleBox: Chalk;

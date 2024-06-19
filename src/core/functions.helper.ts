@@ -1,19 +1,18 @@
 import chalk from 'chalk';
-import { ModuleConfig, PageConfig, CVStyles, TitleAsciiShades } from 'functions.d.helper.js';
+import { PageConfig, CVStyles, TitleAsciiShades } from 'functions.d.helper.js';
 
 export const clearConsole = (): boolean => process.stdout.write('\x1Bc'); // Reliable Console Escape Sequence
 export const log = (value: string): void => console.log(value); // shorthand
-
-export async function importConfig(
-  defaultModule: any,
+export async function importConfig<T>(
+  defaultModule: T,
   modulePath: string,
   errorMessage: string,
-): Promise<any> {
+): Promise<T> {
   try {
-    const module: ModuleConfig = await import(modulePath);
-    return module[Object.keys(module)[0]]; // Assumes default export
+    const module: { [key: string]: never } = await import(modulePath);
+    return module[Object.keys(module)[0]] as T; // Assumes default export
   } catch {
-    log(errorMessage);
+    console.error(errorMessage);
     return defaultModule;
   }
 }
@@ -74,18 +73,18 @@ function figletStringtoArray(figletString: string): string[][] {
     .filter(group => group.length > 0);
 }
 
-function transformLines(lines: string[][]): (string | {})[] {
-  let newLines;
+function transformLines(lines: string[][]): (string | Record<string, string[]>)[] {
+  let newLines: (string | Record<string, string[]>)[];
 
   if (lines.length > 1) {
     newLines = [
       { [findLongestLine([lines[0]])[0]]: lines[0] },
-      [],
+      '',
       { [findLongestLine([lines[1]])[0]]: lines[1] },
-      [],
+      '',
     ];
   } else {
-    newLines = [{ [findLongestLine([lines[0]])[0]]: lines[0] }, []];
+    newLines = [{ [findLongestLine([lines[0]])[0]]: lines[0] }, ''];
   }
 
   return newLines;
@@ -102,7 +101,7 @@ function findLongestLine(arr: string[][]): number[] {
 }
 
 export function cleanAsciiArtText(asciiArtText: string): (string | Record<string, string[]>)[] {
-  let lines = figletStringtoArray(asciiArtText);
+  const lines = figletStringtoArray(asciiArtText);
 
   if (lines.length > 2) {
     log(chalk.red('Use shorter Title, only two rows allowed.'));
@@ -120,11 +119,11 @@ export function paddingColorRows(
 ): string {
   return cleanLines
     .map(obj => {
-      if (Array.isArray(obj) && obj.length === 0) {
-        return '';
+      if (typeof obj === 'string') {
+        return obj;
       }
-      const key = Object.keys(obj)[0] as string;
 
+      const key = Object.keys(obj)[0] as string;
       const lines = (obj as { [key: string]: string[] })[key];
       let linePaddingX = titlePaddingX;
 
