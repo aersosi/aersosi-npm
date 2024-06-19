@@ -1,4 +1,6 @@
-export const themeBox = {
+import { ThemeBox } from 'functions.d.print.js';
+
+export const themeBox: ThemeBox = {
   square: {
     topLeft: '┏',
     topRight: '┓',
