@@ -1,15 +1,9 @@
 import { Chalk } from 'chalk';
 import { Print } from '../core/functions.print';
-import { ConfigCvStyles, ConfigCvContent } from './config.d.cvStyles.js';
+import { defaultCvStyles } from '../default/default.cvStyles.js';
 
-export interface CvStyles extends ConfigCvStyles {
-  titleStyleBox: Chalk;
-  subTitleStyleBox: Chalk;
-  bodyStyleBox: Chalk;
-}
-
-export interface Core {
-  cvContent: ConfigCvContent;
+export interface ICore {
+  cvContent: CvContent;
   cvStyles: CvStyles;
   print: Print;
   titleAsciiText: string;
@@ -19,3 +13,16 @@ export interface Core {
   pageExtraName: string | null;
   pageExtraContent: string | null;
 }
+
+type CvContent = Record<
+  string,
+  Array<{
+    title?: string;
+    subtitle?: string;
+    emptyLine?: string;
+    body?: string;
+    [key: string]: string | undefined;
+  }>
+>;
+
+type CvStyles = typeof defaultCvStyles;

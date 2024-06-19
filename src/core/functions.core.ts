@@ -9,10 +9,12 @@ import {
   importExtraPageConfig,
   handleNarrowConsole,
 } from './functions.helper.js';
+import { CvStyles, CvContent, ICore } from 'functions.d.core.js';
 
 import { defaultCvContent } from '../default/default.cvContent.js';
 import { defaultCvStyles } from '../default/default.cvStyles.js';
 import defaultMenuConfig from '../default/default.inquirerMenu.js';
+import { Chalk } from 'chalk';
 
 const configCvStyles = await importConfig(
   defaultCvStyles,
@@ -31,30 +33,16 @@ const menuConfig = await importConfig(
 );
 const pageExtraConfig = await importExtraPageConfig();
 
-type CvContent = {
-  [key: string]: Array<{
-    title?: string;
-    subtitle?: string;
-    emptyLine?: string;
-    body?: string;
-    [key: string]: string | undefined;
-  }>;
-};
-
-type CvStyles = typeof defaultCvStyles;
-type MenuConfig = typeof defaultMenuConfig;
-type PageExtraConfig = { name: string; content: string } | null;
-
-export class Core {
-  private cvContent: CvContent;
-  private cvStyles: CvStyles;
-  private print: Print;
-  private titleAsciiText: string;
-  private titleAsciiPadding: number;
-  private subtitleAsciiText: string;
-  private subtitleAsciiColor: (text: string) => string;
-  private pageExtraName: string | null;
-  private pageExtraContent: string | null;
+export class Core implements ICore {
+  cvContent: CvContent;
+  cvStyles: CvStyles;
+  titleAsciiText: string;
+  titleAsciiPadding: number;
+  subtitleAsciiText: string;
+  subtitleAsciiColor: Chalk;
+  pageExtraName: string | null;
+  pageExtraContent: string | null;
+  print: Print;
 
   constructor() {
     this.cvContent = { ...defaultCvContent, ...configCvContent };

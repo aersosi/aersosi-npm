@@ -24,7 +24,14 @@ export interface ThemeBox {
   [key: string]: BoxStyle;
 }
 
-export interface Print {
+export interface IPrint {
+  outlinesVertical: number;
+  length: number;
+  boxColor: Chalk;
+  textPaddingX: number;
+  style: BoxStyle;
+  titleAsciiShades: Record<string, string>;
+
   top(): void;
   bottom(): void;
   divider(): void;

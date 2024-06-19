@@ -1,7 +1,8 @@
 import chalk from 'chalk';
+import { ModuleConfig, PageConfig, CVStyles, TitleAsciiShades } from 'functions.d.helper.js';
 
 export const clearConsole = (): boolean => process.stdout.write('\x1Bc'); // Reliable Console Escape Sequence
-export const log = (value: any): void => console.log(value); // shorthand
+export const log = (value: string): void => console.log(value); // shorthand
 
 export async function importConfig(
   defaultModule: any,
@@ -9,7 +10,7 @@ export async function importConfig(
   errorMessage: string,
 ): Promise<any> {
   try {
-    const module = await import(modulePath);
+    const module: ModuleConfig = await import(modulePath);
     return module[Object.keys(module)[0]]; // Assumes default export
   } catch {
     log(errorMessage);
@@ -17,7 +18,7 @@ export async function importConfig(
   }
 }
 
-export async function importExtraPageConfig(): Promise<{ name: string; content: string } | null> {
+export async function importExtraPageConfig(): Promise<PageConfig> {
   try {
     const pageExtraModule = await import('../config/config.pageExtra.js');
     return {
@@ -30,10 +31,7 @@ export async function importExtraPageConfig(): Promise<{ name: string; content: 
   }
 }
 
-export async function handleNarrowConsole(
-  option: Function,
-  cvStyles: { maxCvWidth: number },
-): Promise<void> {
+export async function handleNarrowConsole(option: () => void, cvStyles: CVStyles): Promise<void> {
   const consoleWidth = process.stdout.columns;
 
   if (consoleWidth < cvStyles.maxCvWidth) {
@@ -43,10 +41,7 @@ export async function handleNarrowConsole(
   }
 }
 
-export async function checkConsoleWidth(
-  option: Function,
-  cvStyles: { maxCvWidth: number },
-): Promise<void> {
+export async function checkConsoleWidth(option: () => void, cvStyles: CVStyles): Promise<void> {
   const intervalCheckWidth = setInterval(() => {
     const newConsoleWidth = process.stdout.columns;
 
@@ -106,7 +101,7 @@ function findLongestLine(arr: string[][]): number[] {
   });
 }
 
-export function cleanAsciiArtText(asciiArtText: string): (string | {})[] {
+export function cleanAsciiArtText(asciiArtText: string): (string | Record<string, string[]>)[] {
   let lines = figletStringtoArray(asciiArtText);
 
   if (lines.length > 2) {
@@ -117,11 +112,11 @@ export function cleanAsciiArtText(asciiArtText: string): (string | {})[] {
 }
 
 export function paddingColorRows(
-  cleanLines: (string | {})[],
+  cleanLines: (string | Record<string, string[]>)[],
   titlePaddingX: number | null = null,
   maxCvWidth: number,
   outlinesVertical: number,
-  titleAsciiShades: { [key: string]: string },
+  titleAsciiShades: TitleAsciiShades,
 ): string {
   return cleanLines
     .map(obj => {

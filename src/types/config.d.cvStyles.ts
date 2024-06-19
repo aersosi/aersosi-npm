@@ -9,21 +9,3 @@ export interface ConfigCvStyles {
   subTitleStyleBox: Chalk;
   bodyStyleBox: Chalk;
 }
-
-export interface ConfigCvContent {
-  [key: string]: any;
-}
-
-export interface MenuConfig {
-  titleAsciiText: string;
-  titleAsciiPadding: number;
-  subtitleAsciiText: string;
-  subtitleAsciiColor: Chalk;
-  menuIndexOptions: any[];
-  menuBackExitOptions: any[];
-}
-
-export interface PageExtraConfig {
-  name: string;
-  content: string;
-}

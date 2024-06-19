@@ -1,10 +1,10 @@
 import figlet from 'figlet';
 import { cleanAsciiArtText, log, paddingColorRows } from './functions.helper.js';
 import { themeBox } from '../default/default.themeBox.js';
-import { CvStyles, BoxStyle } from 'functions.d.print.js';
+import { CvStyles, BoxStyle, IPrint } from 'functions.d.print.js';
 import { Chalk } from 'chalk';
 
-export class Print {
+export class Print implements IPrint {
   outlinesVertical = 2;
   length: number;
   boxColor: Chalk;
