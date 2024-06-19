@@ -1,7 +1,7 @@
 import chalk, { Chalk } from 'chalk';
-import { ThemeColors } from 'config.d.themeColors.js';
+import { Shades, ThemeColors } from 'config.d.themeColors.js';
 
-export const shades: Record<string, string> = {
+export const shades: Shades = {
   1: '#ffffff',
   2: '#cccccc',
   3: '#999999',
@@ -10,7 +10,6 @@ export const shades: Record<string, string> = {
 };
 
 const shadesChalk: Record<string, Chalk> = {};
-
 Object.entries(shades).forEach(([key, value]) => {
   shadesChalk['shade' + key] = chalk.hex(value);
 });

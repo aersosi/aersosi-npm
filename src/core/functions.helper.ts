@@ -1,34 +1,23 @@
 import chalk from 'chalk';
-import {
-  CheckConsoleWidthFunction,
-  CleanAsciiArtTextFunction,
-  ConsoleFunction,
-  FigletStringToArrayFunction,
-  FindLongestLineFunction,
-  HandleNarrowConsoleFunction,
-  ImportConfigFunction,
-  TransformLinesFunction,
-} from 'functions.d.helper.js';
 
-export const clearConsole = () => process.stdout.write('\x1Bc'); // Reliable Console Escape Sequence
-export const log: ConsoleFunction = (...values) => console.log(...values);
-export const error: ConsoleFunction = (...values) => console.error(...values);
+export const clearConsole = (): boolean => process.stdout.write('\x1Bc'); // Reliable Console Escape Sequence
+export const log = (value: any): void => console.log(value); // shorthand
 
-export const importConfig: ImportConfigFunction = async (
-  defaultModule,
-  modulePath,
-  errorMessage,
-) => {
+export async function importConfig(
+  defaultModule: any,
+  modulePath: string,
+  errorMessage: string,
+): Promise<any> {
   try {
     const module = await import(modulePath);
-    return module.default || module;
-  } catch (err) {
-    error(errorMessage, err);
+    return module[Object.keys(module)[0]]; // Assumes default export
+  } catch {
+    log(errorMessage);
     return defaultModule;
   }
-};
+}
 
-export async function importExtraPageConfig() {
+export async function importExtraPageConfig(): Promise<{ name: string; content: string } | null> {
   try {
     const pageExtraModule = await import('../config/config.pageExtra.js');
     return {
@@ -41,7 +30,10 @@ export async function importExtraPageConfig() {
   }
 }
 
-export const handleNarrowConsole: HandleNarrowConsoleFunction = async (option, cvStyles) => {
+export async function handleNarrowConsole(
+  option: Function,
+  cvStyles: { maxCvWidth: number },
+): Promise<void> {
   const consoleWidth = process.stdout.columns;
 
   if (consoleWidth < cvStyles.maxCvWidth) {
@@ -49,9 +41,12 @@ export const handleNarrowConsole: HandleNarrowConsoleFunction = async (option, c
   } else {
     await option();
   }
-};
+}
 
-export const checkConsoleWidth: CheckConsoleWidthFunction = async (option, cvStyles) => {
+export async function checkConsoleWidth(
+  option: Function,
+  cvStyles: { maxCvWidth: number },
+): Promise<void> {
   const intervalCheckWidth = setInterval(() => {
     const newConsoleWidth = process.stdout.columns;
 
@@ -63,62 +58,87 @@ export const checkConsoleWidth: CheckConsoleWidthFunction = async (option, cvSty
       setTimeout(option, 1000);
     }
   }, 250);
-};
+}
 
-const figletStringToArray: FigletStringToArrayFunction = figletString => {
+function figletStringtoArray(figletString: string): string[][] {
   return figletString
     .split('\n')
-    .reduce<string[][]>((acc, line) => {
-      const cleanLine = line.replace(/[\s\u200B]/g, ' ').trim();
-      if (cleanLine.length > 0) {
-        acc.push([cleanLine]);
+    .reduce((acc: string[][], line: string) => {
+      if (line.trim() === '') {
+        if (acc.length === 0 || acc[acc.length - 1].length !== 0) {
+          acc.push([]);
+        }
+      } else {
+        if (acc.length === 0) {
+          acc.push([]);
+        }
+        acc[acc.length - 1].push(line.trimEnd());
       }
       return acc;
     }, [])
     .filter(group => group.length > 0);
-};
+}
 
-const transformLines: TransformLinesFunction = lines => {
-  return lines.reduce(
-    (acc, line, index) => {
-      if (index > 0) {
-        acc.push({});
-      }
-      acc.push({ [findLongestLine([line])]: [line] });
-      return acc;
-    },
-    [] as { [key: string]: string[] }[],
-  );
-};
+function transformLines(lines: string[][]): (string | {})[] {
+  let newLines;
 
-const findLongestLine = (lines: string[]): string => {
-  return lines.reduce((longest, line) => (line.length > longest.length ? line : longest), '');
-};
+  if (lines.length > 1) {
+    newLines = [
+      { [findLongestLine([lines[0]])[0]]: lines[0] },
+      [],
+      { [findLongestLine([lines[1]])[0]]: lines[1] },
+      [],
+    ];
+  } else {
+    newLines = [{ [findLongestLine([lines[0]])[0]]: lines[0] }, []];
+  }
 
-export const cleanAsciiArtText: CleanAsciiArtTextFunction = asciiArtText => {
-  const lines = asciiArtText.split('\n');
-  return lines.map(line => ({ [line.length]: line.split('') }));
-};
+  return newLines;
+}
+
+function findLongestLine(arr: string[][]): number[] {
+  return arr.map(childArray => {
+    if (!Array.isArray(childArray) || childArray.length === 0) {
+      return 0;
+    }
+    const lineLengths = childArray.map(line => line.length);
+    return Math.max(...lineLengths);
+  });
+}
+
+export function cleanAsciiArtText(asciiArtText: string): (string | {})[] {
+  let lines = figletStringtoArray(asciiArtText);
+
+  if (lines.length > 2) {
+    log(chalk.red('Use shorter Title, only two rows allowed.'));
+  }
+
+  return transformLines(lines);
+}
 
 export function paddingColorRows(
-  cleanLines: any[],
-  titlePaddingX: number | null,
+  cleanLines: (string | {})[],
+  titlePaddingX: number | null = null,
   maxCvWidth: number,
   outlinesVertical: number,
-  titleAsciiShades: Record<string, string>,
+  titleAsciiShades: { [key: string]: string },
 ): string {
   return cleanLines
     .map(obj => {
       if (Array.isArray(obj) && obj.length === 0) {
         return '';
       }
-      const key = Object.keys(obj)[0];
-      const lines = obj[key];
+      const key = Object.keys(obj)[0] as string;
+
+      const lines = (obj as { [key: string]: string[] })[key];
       let linePaddingX = titlePaddingX;
+
       if (linePaddingX === null) {
-        linePaddingX = Math.ceil((maxCvWidth + outlinesVertical - parseInt(key, 10)) * 0.5);
+        linePaddingX = Math.ceil((maxCvWidth + outlinesVertical - parseInt(key)) * 0.5);
       }
+
       const colors = Object.values(titleAsciiShades);
+
       return lines
         .map((line: string, lineIndex: number) => {
           const colorIndex = lineIndex % colors.length;

@@ -13,35 +13,48 @@ import {
 import { defaultCvContent } from '../default/default.cvContent.js';
 import { defaultCvStyles } from '../default/default.cvStyles.js';
 import defaultMenuConfig from '../default/default.inquirerMenu.js';
-import { Core as CoreInterface, CvStyles } from 'functions.d.core.js';
 
 const configCvStyles = await importConfig(
   defaultCvStyles,
-  '../config/config.cvStyles.ts',
+  '../config/config.cvStyles.js',
   'Custom CV styles not found, using default styles.',
 );
 const configCvContent = await importConfig(
   defaultCvContent,
-  '../config/config.cvContent.ts',
+  '../config/config.cvContent.js',
   'Custom CV content not found, using default content.',
 );
 const menuConfig = await importConfig(
   defaultMenuConfig,
-  '../config/config.inquirerMenu.ts',
+  '../config/config.inquirerMenu.js',
   'Custom menu config not found, using default config.',
 );
 const pageExtraConfig = await importExtraPageConfig();
 
-export class Core implements CoreInterface {
-  cvContent = { ...defaultCvContent, ...configCvContent };
-  cvStyles = { ...defaultCvStyles, ...configCvStyles } as CvStyles;
-  print = new Print(this.cvStyles);
-  titleAsciiText = menuConfig.titleAsciiText;
-  titleAsciiPadding = menuConfig.titleAsciiPadding;
-  subtitleAsciiText = menuConfig.subtitleAsciiText;
-  subtitleAsciiColor = menuConfig.subtitleAsciiColor;
-  pageExtraName = pageExtraConfig ? pageExtraConfig.name : null;
-  pageExtraContent = pageExtraConfig ? pageExtraConfig.content : null;
+type CvContent = {
+  [key: string]: Array<{
+    title?: string;
+    subtitle?: string;
+    emptyLine?: string;
+    body?: string;
+    [key: string]: string | undefined;
+  }>;
+};
+
+type CvStyles = typeof defaultCvStyles;
+type MenuConfig = typeof defaultMenuConfig;
+type PageExtraConfig = { name: string; content: string } | null;
+
+export class Core {
+  private cvContent: CvContent;
+  private cvStyles: CvStyles;
+  private print: Print;
+  private titleAsciiText: string;
+  private titleAsciiPadding: number;
+  private subtitleAsciiText: string;
+  private subtitleAsciiColor: (text: string) => string;
+  private pageExtraName: string | null;
+  private pageExtraContent: string | null;
 
   constructor() {
     this.cvContent = { ...defaultCvContent, ...configCvContent };
@@ -55,7 +68,7 @@ export class Core implements CoreInterface {
     this.pageExtraContent = pageExtraConfig ? pageExtraConfig.content : null;
   }
 
-  async menuIndex() {
+  async menuIndex(): Promise<void> {
     clearConsole();
 
     this.print.titleAscii(this.titleAsciiText, this.titleAsciiPadding);
@@ -79,7 +92,7 @@ export class Core implements CoreInterface {
     }
   }
 
-  async menuBackExit() {
+  async menuBackExit(): Promise<void> {
     log(''); // empty row
 
     try {
@@ -97,7 +110,7 @@ export class Core implements CoreInterface {
     }
   }
 
-  async pageCV(option: string) {
+  async pageCV(option: string): Promise<void> {
     if (!Object.prototype.hasOwnProperty.call(this.cvContent, option)) {
       console.error('Error: Missing or invalid data for ' + option);
       return;
@@ -109,7 +122,7 @@ export class Core implements CoreInterface {
     this.print.top();
     this.print.empty();
 
-    data.forEach((info: any, index: number) => {
+    data.forEach((info, index) => {
       const formattingFunctions = {
         emptyLine: () => this.print.empty(),
         title: (value: string) =>
@@ -138,26 +151,22 @@ export class Core implements CoreInterface {
     await this.menuBackExit();
   }
 
-  async pageExtra() {
+  async pageExtra(): Promise<void> {
     clearConsole();
-    if (this.pageExtraName) {
-      this.print.titleAscii(this.pageExtraName);
-    }
-    if (this.pageExtraContent) {
-      this.print.pageExtraContent(this.pageExtraContent);
-    }
+    this.print.titleAscii(this.pageExtraName || '');
+    this.print.pageExtraContent(this.pageExtraContent || '');
     await this.menuBackExit();
   }
 
-  async showMenuIndex() {
+  async showMenuIndex(): Promise<void> {
     await handleNarrowConsole(this.menuIndex.bind(this), this.cvStyles);
   }
 
-  async showPageCV(option: string) {
+  async showPageCV(option: string): Promise<void> {
     await handleNarrowConsole(this.pageCV.bind(this, option), this.cvStyles);
   }
 
-  async showPageExtra() {
+  async showPageExtra(): Promise<void> {
     await handleNarrowConsole(this.pageExtra.bind(this), this.cvStyles);
   }
 }
