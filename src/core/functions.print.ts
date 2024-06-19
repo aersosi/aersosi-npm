@@ -1,10 +1,18 @@
 import figlet from 'figlet';
 import { cleanAsciiArtText, log, paddingColorRows } from './functions.helper.js';
 import { themeBox } from '../default/default.themeBox.js';
+import { CvStyles, BoxStyle } from 'functions.d.print.js';
+import { Chalk } from 'chalk';
+
 export class Print {
   outlinesVertical = 2;
+  length: number;
+  boxColor: Chalk;
+  textPaddingX: number;
+  style: BoxStyle;
+  titleAsciiShades: Record<string, string>;
 
-  constructor(cvStyles) {
+  constructor(cvStyles: CvStyles) {
     this.length = cvStyles.maxCvWidth - this.outlinesVertical;
     this.boxColor = cvStyles.boxColor;
     this.textPaddingX = cvStyles.textPaddingX;
@@ -12,7 +20,7 @@ export class Print {
     this.titleAsciiShades = cvStyles.titleAsciiShades;
   }
 
-  top() {
+  top(): void {
     log(
       this.boxColor(
         `${this.style.topLeft}${this.style.horizontal.repeat(this.length)}${this.style.topRight}`,
@@ -20,7 +28,7 @@ export class Print {
     );
   }
 
-  bottom() {
+  bottom(): void {
     log(
       this.boxColor(
         `${this.style.bottomLeft}${this.style.horizontal.repeat(this.length)}${this.style.bottomRight}`,
@@ -28,7 +36,7 @@ export class Print {
     );
   }
 
-  divider() {
+  divider(): void {
     log(
       this.boxColor(
         `${this.style.centerLeft}${this.style.horizontal.repeat(this.length)}${this.style.centerRight}`,
@@ -36,11 +44,11 @@ export class Print {
     );
   }
 
-  empty() {
+  empty(): void {
     log(this.boxColor(`${this.style.vertical}${' '.repeat(this.length)}${this.style.vertical}`));
   }
 
-  text(string, bodyStyleBox) {
+  text(string: string, bodyStyleBox: Chalk): string {
     const ellipsis = '...';
     let stringSanitized;
 
@@ -56,7 +64,7 @@ export class Print {
     return `${this.boxColor(this.style.vertical)}${bodyStyleBox(rowContent)}${this.boxColor(this.style.vertical)}`;
   }
 
-  titleAscii(string = 'test', titlePaddingX = null) {
+  titleAscii(string: string = 'test', titlePaddingX: number | null = null): void {
     const asciiArtText = figlet.textSync(string, {
       font: 'ANSI Regular',
       width: this.length,
@@ -76,7 +84,7 @@ export class Print {
     log(`\n${processedRows}`);
   }
 
-  pageExtraContent(content) {
+  pageExtraContent(content: string): void {
     log(content);
   }
 }

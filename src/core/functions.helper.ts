@@ -1,8 +1,13 @@
 import chalk from 'chalk';
 
-export const clearConsole = () => process.stdout.write('\x1Bc'); // Reliable Console Escape Sequence
-export const log = value => console.log(value); // shorthand
-export async function importConfig(defaultModule, modulePath, errorMessage) {
+export const clearConsole = (): boolean => process.stdout.write('\x1Bc'); // Reliable Console Escape Sequence
+export const log = (value: any): void => console.log(value); // shorthand
+
+export async function importConfig(
+  defaultModule: any,
+  modulePath: string,
+  errorMessage: string,
+): Promise<any> {
   try {
     const module = await import(modulePath);
     return module[Object.keys(module)[0]]; // Assumes default export
@@ -11,7 +16,8 @@ export async function importConfig(defaultModule, modulePath, errorMessage) {
     return defaultModule;
   }
 }
-export async function importExtraPageConfig() {
+
+export async function importExtraPageConfig(): Promise<{ name: string; content: string } | null> {
   try {
     const pageExtraModule = await import('../config/config.pageExtra.js');
     return {
@@ -23,7 +29,11 @@ export async function importExtraPageConfig() {
     return null;
   }
 }
-export async function handleNarrowConsole(option, cvStyles) {
+
+export async function handleNarrowConsole(
+  option: Function,
+  cvStyles: { maxCvWidth: number },
+): Promise<void> {
   const consoleWidth = process.stdout.columns;
 
   if (consoleWidth < cvStyles.maxCvWidth) {
@@ -32,7 +42,11 @@ export async function handleNarrowConsole(option, cvStyles) {
     await option();
   }
 }
-export async function checkConsoleWidth(option, cvStyles) {
+
+export async function checkConsoleWidth(
+  option: Function,
+  cvStyles: { maxCvWidth: number },
+): Promise<void> {
   const intervalCheckWidth = setInterval(() => {
     const newConsoleWidth = process.stdout.columns;
 
@@ -45,10 +59,11 @@ export async function checkConsoleWidth(option, cvStyles) {
     }
   }, 250);
 }
-function figletStringtoArray(figletString) {
+
+function figletStringtoArray(figletString: string): string[][] {
   return figletString
     .split('\n')
-    .reduce((acc, line) => {
+    .reduce((acc: string[][], line: string) => {
       if (line.trim() === '') {
         if (acc.length === 0 || acc[acc.length - 1].length !== 0) {
           acc.push([]);
@@ -63,7 +78,8 @@ function figletStringtoArray(figletString) {
     }, [])
     .filter(group => group.length > 0);
 }
-function transformLines(lines) {
+
+function transformLines(lines: string[][]): (string | {})[] {
   let newLines;
 
   if (lines.length > 1) {
@@ -79,7 +95,8 @@ function transformLines(lines) {
 
   return newLines;
 }
-function findLongestLine(arr) {
+
+function findLongestLine(arr: string[][]): number[] {
   return arr.map(childArray => {
     if (!Array.isArray(childArray) || childArray.length === 0) {
       return 0;
@@ -88,7 +105,8 @@ function findLongestLine(arr) {
     return Math.max(...lineLengths);
   });
 }
-export function cleanAsciiArtText(asciiArtText) {
+
+export function cleanAsciiArtText(asciiArtText: string): (string | {})[] {
   let lines = figletStringtoArray(asciiArtText);
 
   if (lines.length > 2) {
@@ -97,31 +115,32 @@ export function cleanAsciiArtText(asciiArtText) {
 
   return transformLines(lines);
 }
+
 export function paddingColorRows(
-  cleanLines,
-  titlePaddingX = null,
-  maxCvWidth,
-  outlinesVertical,
-  titleAsciiShades,
-) {
+  cleanLines: (string | {})[],
+  titlePaddingX: number | null = null,
+  maxCvWidth: number,
+  outlinesVertical: number,
+  titleAsciiShades: { [key: string]: string },
+): string {
   return cleanLines
     .map(obj => {
       if (Array.isArray(obj) && obj.length === 0) {
         return '';
       }
-      const key = Object.keys(obj)[0];
+      const key = Object.keys(obj)[0] as string;
 
-      const lines = obj[key];
+      const lines = (obj as { [key: string]: string[] })[key];
       let linePaddingX = titlePaddingX;
 
       if (linePaddingX === null) {
-        linePaddingX = Math.ceil((maxCvWidth + outlinesVertical - key) * 0.5);
+        linePaddingX = Math.ceil((maxCvWidth + outlinesVertical - parseInt(key)) * 0.5);
       }
 
       const colors = Object.values(titleAsciiShades);
 
       return lines
-        .map((line, lineIndex) => {
+        .map((line: string, lineIndex: number) => {
           const colorIndex = lineIndex % colors.length;
           const color = colors[colorIndex];
           const paddedLine = `${' '.repeat(linePaddingX)}${line}`;
