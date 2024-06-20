@@ -63,40 +63,29 @@ export class Core implements ICore {
     log(this.subtitleAsciiColor(this.subtitleAsciiText));
     log(''); // empty row
 
-    try {
-      const { cvOptions } = await inquirer.prompt(
-        menuConfig.menuIndexOptions as QuestionCollection,
-      );
-      const cleanOption = stripAnsi(cvOptions);
+    const { cvOptions } = await inquirer.prompt(menuConfig.menuIndexOptions as QuestionCollection);
+    const cleanOption = stripAnsi(cvOptions);
 
-      if (this.pageExtraName && cleanOption === this.pageExtraName) {
-        await this.showPageExtra();
-      } else if (cleanOption === 'Exit') {
-        clearConsole();
-      } else {
-        clearConsole();
-        await this.showPageCV(cleanOption);
-      }
-    } catch (error) {
-      console.error('Error in menuIndex:', error);
+    if (this.pageExtraName && cleanOption === this.pageExtraName) {
+      await this.showPageExtra();
+    } else if (cleanOption === 'Exit') {
+      clearConsole();
+    } else {
+      clearConsole();
+      await this.showPageCV(cleanOption);
     }
   }
 
   async menuBack(): Promise<void> {
     log(''); // empty row
+    const { menuBack } = await inquirer.prompt(menuConfig.menuBackOptions as QuestionCollection);
+    const cleanOption = stripAnsi(menuBack);
 
-    try {
-      const { menuBack } = await inquirer.prompt(menuConfig.menuBackOptions as QuestionCollection);
-      const cleanOption = stripAnsi(menuBack);
-
-      if (cleanOption === 'Back') {
-        clearConsole();
-        await this.menuIndex();
-      } else {
-        clearConsole();
-      }
-    } catch (error) {
-      console.error('Error in menuBack:', error);
+    if (cleanOption === 'Back') {
+      clearConsole();
+      await this.menuIndex();
+    } else {
+      clearConsole();
     }
   }
 
