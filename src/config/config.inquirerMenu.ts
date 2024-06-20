@@ -22,7 +22,7 @@ const menuIndexOptions = {
   loop: false,
 };
 
-const menuBackExitOptions = {
+const menuBackOptions = {
   type: 'list',
   prefix: '',
   name: 'menuBack',
@@ -39,7 +39,7 @@ const subtitleAsciiColor = themeColors.shade3;
 
 const menuConfig = {
   menuIndexOptions,
-  menuBackExitOptions,
+  menuBackOptions,
   titleAsciiText,
   titleAsciiPadding,
   subtitleAsciiText,

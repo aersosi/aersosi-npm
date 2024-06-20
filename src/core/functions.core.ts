@@ -82,13 +82,11 @@ export class Core implements ICore {
     }
   }
 
-  async menuBackExit(): Promise<void> {
+  async menuBack(): Promise<void> {
     log(''); // empty row
 
     try {
-      const { menuBack } = await inquirer.prompt(
-        menuConfig.menuBackExitOptions as QuestionCollection,
-      );
+      const { menuBack } = await inquirer.prompt(menuConfig.menuBackOptions as QuestionCollection);
       const cleanOption = stripAnsi(menuBack);
 
       if (cleanOption === 'Back') {
@@ -98,7 +96,7 @@ export class Core implements ICore {
         clearConsole();
       }
     } catch (error) {
-      console.error('Error in menuBackExit:', error);
+      console.error('Error in menuBack:', error);
     }
   }
 
@@ -140,25 +138,49 @@ export class Core implements ICore {
     this.print.empty();
     this.print.bottom();
 
-    await this.menuBackExit();
+    await this.showMenuBack();
   }
 
   async pageExtra(): Promise<void> {
     clearConsole();
     this.print.titleAscii(this.pageExtraName || '');
     this.print.pageExtraContent(this.pageExtraContent || '');
-    await this.menuBackExit();
+    await this.showMenuBack();
+  }
+
+  async showMenuBack(): Promise<void> {
+    try {
+      await this.menuBack();
+    } catch (error) {
+      console.error('An unexpected error occurred while showing the menu back.');
+      console.debug('Error details:', error);
+    }
   }
 
   async showMenuIndex(): Promise<void> {
-    await handleNarrowConsole(this.menuIndex.bind(this), this.cvStyles);
+    try {
+      await handleNarrowConsole(this.menuIndex.bind(this), this.cvStyles);
+    } catch (error) {
+      console.error('An unexpected error occurred while showing the menu index.');
+      console.debug('Error details:', error);
+    }
   }
 
   async showPageCV(option: string): Promise<void> {
-    await handleNarrowConsole(this.pageCV.bind(this, option), this.cvStyles);
+    try {
+      await handleNarrowConsole(this.pageCV.bind(this, option), this.cvStyles);
+    } catch (error) {
+      console.error('An error occurred while showing the CV page');
+      console.debug('Error details:', error);
+    }
   }
 
   async showPageExtra(): Promise<void> {
-    await handleNarrowConsole(this.pageExtra.bind(this), this.cvStyles);
+    try {
+      await handleNarrowConsole(this.pageExtra.bind(this), this.cvStyles);
+    } catch (error) {
+      console.error('An error occurred while showing the extra page');
+      console.debug('Error details:', error);
+    }
   }
 }
