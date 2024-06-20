@@ -1,4 +1,6 @@
-export const configCvContent = {
+import { IConfigCvContent } from 'config.d.cvContent.js';
+
+export const configCvContent: IConfigCvContent = {
   Experience: [
     {
       title: 'Lorem',

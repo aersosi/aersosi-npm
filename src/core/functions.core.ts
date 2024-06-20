@@ -9,15 +9,17 @@ import {
   importExtraPageConfig,
   handleNarrowConsole,
 } from './functions.helper.js';
-import { CvStyles, CvContent, ICore } from 'functions.d.core.js';
+import { ICore } from 'functions.d.core.js';
+import { IConfigCvContent } from 'config.d.cvContent.js';
 
 import { defaultCvContent } from '../default/default.cvContent.js';
-import { defaultCvStyles } from '../default/default.cvStyles.js';
+import { defaultICvStyles } from '../default/default.cvStyles.js';
 import defaultMenuConfig from '../default/default.inquirerMenu.js';
 import { Chalk } from 'chalk';
+import { IConfigICvStyles } from 'config.d.cvStyles.js';
 
-const configCvStyles = await importConfig(
-  defaultCvStyles,
+const configICvStyles = await importConfig(
+  defaultICvStyles,
   '../config/config.cvStyles.js',
   'Custom CV styles not found, using default styles.',
 );
@@ -34,8 +36,8 @@ const menuConfig = await importConfig(
 const pageExtraConfig = await importExtraPageConfig();
 
 export class Core implements ICore {
-  cvContent: CvContent;
-  cvStyles: CvStyles;
+  cvContent: IConfigCvContent;
+  cvStyles: IConfigICvStyles;
   titleAsciiText: string;
   titleAsciiPadding: number;
   subtitleAsciiText: string;
@@ -46,7 +48,7 @@ export class Core implements ICore {
 
   constructor() {
     this.cvContent = { ...defaultCvContent, ...configCvContent };
-    this.cvStyles = { ...defaultCvStyles, ...configCvStyles };
+    this.cvStyles = { ...defaultICvStyles, ...configICvStyles };
     this.print = new Print(this.cvStyles);
     this.titleAsciiText = menuConfig.titleAsciiText;
     this.titleAsciiPadding = menuConfig.titleAsciiPadding ?? 0;

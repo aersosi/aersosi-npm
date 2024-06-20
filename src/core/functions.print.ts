@@ -1,8 +1,9 @@
 import figlet from 'figlet';
 import { cleanAsciiArtText, log, paddingColorRows } from './functions.helper.js';
 import { themeBox } from '../default/default.themeBox.js';
-import { CvStyles, BoxStyle, IPrint } from 'functions.d.print.js';
+import { ICvStyles, BoxStyle, IPrint } from 'functions.d.print.js';
 import { Chalk } from 'chalk';
+import { TitleAsciiShades } from 'config.d.themeColors.js';
 
 export class Print implements IPrint {
   outlinesVertical: number = 2;
@@ -10,9 +11,9 @@ export class Print implements IPrint {
   boxColor: Chalk;
   textPaddingX: number;
   style: BoxStyle;
-  titleAsciiShades: Record<string, string>;
+  titleAsciiShades: TitleAsciiShades;
 
-  constructor(cvStyles: CvStyles) {
+  constructor(cvStyles: ICvStyles) {
     this.length = cvStyles.maxCvWidth - this.outlinesVertical;
     this.boxColor = cvStyles.boxColor;
     this.textPaddingX = cvStyles.textPaddingX;
