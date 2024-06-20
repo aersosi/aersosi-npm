@@ -1,7 +1,7 @@
 import figlet from 'figlet';
 import { cleanAsciiArtText, log, paddingColorRows } from './functions.helper.js';
 import { themeBox } from '../default/default.themeBox.js';
-import { ICvStyles, BoxStyle, IPrint } from 'functions.d.print.js';
+import { ICvStyles, IBoxStyle, IPrint } from 'functions.d.print.js';
 import { Chalk } from 'chalk';
 import { TitleAsciiShades } from 'config.d.themeColors.js';
 
@@ -10,7 +10,7 @@ export class Print implements IPrint {
   length: number;
   boxColor: Chalk;
   textPaddingX: number;
-  style: BoxStyle;
+  style: IBoxStyle;
   titleAsciiShades: TitleAsciiShades;
 
   constructor(cvStyles: ICvStyles) {

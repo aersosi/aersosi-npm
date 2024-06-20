@@ -10,6 +10,20 @@ export default tseslint.config(
       },
     },
     ignores: ['node_modules'],
+    rules: {
+      '@typescript-eslint/naming-convention': [
+        'warn',
+        {
+          selector: 'variable',
+          format: ['camelCase'],
+        },
+        {
+          selector: 'interface',
+          format: ['PascalCase'],
+          prefix: ['I'],
+        },
+      ],
+    },
   },
   ...tseslint.configs.recommended,
 );
