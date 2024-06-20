@@ -3,11 +3,11 @@ import { IThemeColors } from 'config.d.themeColors.js';
 import { TitleAsciiShades } from 'config.d.themeColors.js';
 
 export const shades: TitleAsciiShades = {
-  1: '#ffff33',
-  2: '#ffbf00',
-  3: '#ff9500',
-  4: '#ff6a00',
-  5: '#ff4000',
+  _1: '#ffff33',
+  _2: '#ffbf00',
+  _3: '#ff9500',
+  _4: '#ff6a00',
+  _5: '#ff4000',
 };
 
 const shadesChalk: Record<string, Chalk> = {};

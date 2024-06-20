@@ -10,7 +10,7 @@ export const configICvStyles: IConfigICvStyles = {
   boxColor: chalk.whiteBright,
   boxStyle: 'rounded',
   titleAsciiShades: shades,
-  titleStyleBox: themeColors.shade3.bold,
+  titleStyleBox: themeColors.shade_3.bold,
   subTitleStyleBox: themeColors.white,
   bodyStyleBox: themeColors.white.italic,
 };

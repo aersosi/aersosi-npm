@@ -1,5 +1,5 @@
 import chalk from 'chalk';
-import { PageConfig, CVStyles } from 'functions.d.helper.js';
+import { ICVStyles, TPageConfig } from 'functions.d.helper.js';
 import { TitleAsciiShades } from 'config.d.themeColors.js';
 
 export const clearConsole = (): boolean => process.stdout.write('\x1Bc'); // Reliable Console Escape Sequence
@@ -18,7 +18,7 @@ export async function importConfig<T>(
   }
 }
 
-export async function importExtraPageConfig(): Promise<PageConfig> {
+export async function importExtraPageConfig(): Promise<TPageConfig> {
   try {
     const pageExtraModule = await import('../config/config.pageExtra.js');
     return {
@@ -31,7 +31,7 @@ export async function importExtraPageConfig(): Promise<PageConfig> {
   }
 }
 
-export async function handleNarrowConsole(option: () => void, cvStyles: CVStyles): Promise<void> {
+export async function handleNarrowConsole(option: () => void, cvStyles: ICVStyles): Promise<void> {
   const consoleWidth = process.stdout.columns;
 
   if (consoleWidth < cvStyles.maxCvWidth) {
@@ -41,7 +41,7 @@ export async function handleNarrowConsole(option: () => void, cvStyles: CVStyles
   }
 }
 
-export async function checkConsoleWidth(option: () => void, cvStyles: CVStyles): Promise<void> {
+export async function checkConsoleWidth(option: () => void, cvStyles: ICVStyles): Promise<void> {
   const intervalCheckWidth = setInterval(() => {
     const newConsoleWidth = process.stdout.columns;
 

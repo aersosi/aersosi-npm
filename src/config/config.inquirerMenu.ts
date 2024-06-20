@@ -18,7 +18,7 @@ const menuIndexOptions = {
   prefix: '',
   name: 'cvOptions',
   message: chalk.reset.dim.italic('  What do you want to know?'),
-  choices: [pageExtraName, ...Object.keys(cvContent), themeColors.shade3('Exit')],
+  choices: [pageExtraName, ...Object.keys(cvContent), themeColors.shade_3('Exit')],
   loop: false,
 };
 
@@ -27,7 +27,7 @@ const menuBackOptions = {
   prefix: '',
   name: 'menuBack',
   message: chalk.reset.dim.italic('  Go back or Exit?'),
-  choices: ['Back', themeColors.shade3('Exit')],
+  choices: ['Back', themeColors.shade_3('Exit')],
   loop: false,
 };
 
@@ -35,7 +35,7 @@ const titleAsciiText = 'Index';
 const titleAsciiPadding = 2;
 
 const subtitleAsciiText = '  Hello, my name is Arthur Ersosi. Welcome to my resume!';
-const subtitleAsciiColor = themeColors.shade3;
+const subtitleAsciiColor = themeColors.shade_3;
 
 const menuConfig = {
   menuIndexOptions,

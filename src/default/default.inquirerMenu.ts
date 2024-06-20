@@ -29,7 +29,7 @@ export const titleAsciiText = 'Index';
 export const titleAsciiPadding = null;
 
 export const subtitleAsciiText = 'Welcome to my resume!';
-export const subtitleAsciiColor = themeColors.shade3;
+export const subtitleAsciiColor = themeColors.shade_3;
 
 const defaultMenuConfig = {
   menuIndexOptions,
