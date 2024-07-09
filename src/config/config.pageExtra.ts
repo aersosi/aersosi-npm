@@ -2,7 +2,7 @@ import chalk from 'chalk';
 import { shades } from './config.themeColors.js';
 
 export const pageExtraName = 'About Me';
-const hs = (text: string) => chalk.hex(shades[3]).bold(text); // highlight style
+const hs = (text: string) => chalk.hex(shades._3).bold(text); // highlight style
 export const pageExtraContent = `
 ╭──────────────────────────────────────────────────────────────────────────────────────╮
 │                                                                                      │

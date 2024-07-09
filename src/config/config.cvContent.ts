@@ -1,4 +1,6 @@
-export const configCvContent = {
+import type { IConfigCvContent } from 'config.d.cvContent.ts';
+
+export const configCvContent: IConfigCvContent = {
   Experience: [
     {
       title: 'Lorem',

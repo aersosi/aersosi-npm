@@ -1,14 +1,15 @@
 import { Chalk } from 'chalk';
+import { TitleAsciiShades } from 'config.d.themeColors.js';
 
-export interface CvStyles {
+export interface ICvStyles {
   maxCvWidth: number;
   boxColor: Chalk;
   textPaddingX: number;
   boxStyle: string;
-  titleAsciiShades: Record<string, string>;
+  titleAsciiShades: TitleAsciiShades;
 }
 
-export interface BoxStyle {
+export interface IBoxStyle {
   topLeft: string;
   topRight: string;
   bottomLeft: string;
@@ -20,8 +21,8 @@ export interface BoxStyle {
   empty: string;
 }
 
-export interface BoxTheme {
-  [key: string]: BoxStyle;
+export interface IBoxTheme {
+  [key: string]: IBoxStyle;
 }
 
 export interface IPrint {

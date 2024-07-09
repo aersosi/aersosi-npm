@@ -1,14 +1,7 @@
 import { Chalk } from 'chalk';
 
-export interface ThemeColors {
+export interface IThemeColors {
   white: Chalk;
   [key: string]: Chalk;
 }
-
-export interface Shades extends Record<string, string> {
-  1: string;
-  2: string;
-  3: string;
-  4: string;
-  5: string;
-}
+export type TitleAsciiShades = { [key: string]: string };
