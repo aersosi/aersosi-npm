@@ -9,14 +9,14 @@ import {
   importExtraPageConfig,
   handleNarrowConsole,
 } from './functions.helper.js';
-import { ICore } from 'functions.d.core.js';
-import { IConfigCvContent } from 'config.d.cvContent.js';
-
 import { defaultCvContent } from '../default/default.cvContent.js';
 import { defaultICvStyles } from '../default/default.cvStyles.js';
 import defaultMenuConfig from '../default/default.inquirerMenu.js';
 import { Chalk } from 'chalk';
-import { IConfigICvStyles } from 'config.d.cvStyles.js';
+
+import type { ICore } from 'functions.d.core.ts';
+import type { IConfigCvContent } from 'config.d.cvContent.ts';
+import type { IConfigICvStyles } from 'config.d.cvStyles.ts';
 
 const configICvStyles = await importConfig(
   defaultICvStyles,

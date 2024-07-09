@@ -1,8 +1,8 @@
-import { themeColors } from './config.themeColors.js';
-import { shades } from './config.themeColors.js';
 import chalk from 'chalk';
+import { shades } from './config.themeColors.js';
+import { themeColors } from './config.themeColors.js';
 
-import { IConfigICvStyles } from 'config.d.cvStyles.js';
+import type { IConfigICvStyles } from 'config.d.cvStyles.ts';
 
 export const configICvStyles: IConfigICvStyles = {
   maxCvWidth: 88,

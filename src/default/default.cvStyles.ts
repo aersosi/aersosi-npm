@@ -1,5 +1,6 @@
 import { shades, themeColors } from './default.themeColors.js';
-import { IConfigICvStyles } from 'config.d.cvStyles.js';
+
+import type { IConfigICvStyles } from 'config.d.cvStyles.ts';
 
 export const defaultICvStyles: IConfigICvStyles = {
   maxCvWidth: 80,

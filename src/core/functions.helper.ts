@@ -1,6 +1,7 @@
 import chalk from 'chalk';
-import { ICVStyles, TPageConfig } from 'functions.d.helper.js';
-import { TitleAsciiShades } from 'config.d.themeColors.js';
+
+import type { ICVStyles, TPageConfig } from 'functions.d.helper.ts';
+import type { TitleAsciiShades } from 'config.d.themeColors.ts';
 
 export const clearConsole = (): boolean => process.stdout.write('\x1Bc'); // Reliable Console Escape Sequence
 export const log = (value: string): void => console.log(value); // shorthand

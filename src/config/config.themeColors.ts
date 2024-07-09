@@ -1,6 +1,7 @@
 import chalk, { Chalk } from 'chalk';
-import { IThemeColors } from 'config.d.themeColors.js';
-import { TitleAsciiShades } from 'config.d.themeColors.js';
+
+import type { IThemeColors } from 'config.d.themeColors.ts';
+import type { TitleAsciiShades } from 'config.d.themeColors.ts';
 
 export const shades: TitleAsciiShades = {
   _1: '#ffff33',

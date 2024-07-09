@@ -1,4 +1,4 @@
-import { IBoxTheme } from 'functions.d.print.js';
+import type { IBoxTheme } from 'functions.d.print.ts';
 
 export const themeBox: IBoxTheme = {
   square: {

@@ -1,4 +1,4 @@
-import { IConfigCvContent } from 'config.d.cvContent.js';
+import type { IConfigCvContent } from 'config.d.cvContent.ts';
 
 export const defaultCvContent: IConfigCvContent = {
   Lorem: [
