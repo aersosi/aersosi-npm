@@ -9,15 +9,17 @@ import {
   importExtraPageConfig,
   handleNarrowConsole,
 } from './functions.helper.js';
-import { CvStyles, CvContent, ICore } from 'functions.d.core.js';
-
 import { defaultCvContent } from '../default/default.cvContent.js';
-import { defaultCvStyles } from '../default/default.cvStyles.js';
+import { defaultICvStyles } from '../default/default.cvStyles.js';
 import defaultMenuConfig from '../default/default.inquirerMenu.js';
 import { Chalk } from 'chalk';
 
-const configCvStyles = await importConfig(
-  defaultCvStyles,
+import type { ICore } from 'functions.d.core.ts';
+import type { IConfigCvContent } from 'config.d.cvContent.ts';
+import type { IConfigICvStyles } from 'config.d.cvStyles.ts';
+
+const configICvStyles = await importConfig(
+  defaultICvStyles,
   '../config/config.cvStyles.js',
   'Custom CV styles not found, using default styles.',
 );
@@ -34,8 +36,8 @@ const menuConfig = await importConfig(
 const pageExtraConfig = await importExtraPageConfig();
 
 export class Core implements ICore {
-  cvContent: CvContent;
-  cvStyles: CvStyles;
+  cvContent: IConfigCvContent;
+  cvStyles: IConfigICvStyles;
   titleAsciiText: string;
   titleAsciiPadding: number;
   subtitleAsciiText: string;
@@ -46,7 +48,7 @@ export class Core implements ICore {
 
   constructor() {
     this.cvContent = { ...defaultCvContent, ...configCvContent };
-    this.cvStyles = { ...defaultCvStyles, ...configCvStyles };
+    this.cvStyles = { ...defaultICvStyles, ...configICvStyles };
     this.print = new Print(this.cvStyles);
     this.titleAsciiText = menuConfig.titleAsciiText;
     this.titleAsciiPadding = menuConfig.titleAsciiPadding ?? 0;
@@ -63,42 +65,29 @@ export class Core implements ICore {
     log(this.subtitleAsciiColor(this.subtitleAsciiText));
     log(''); // empty row
 
-    try {
-      const { cvOptions } = await inquirer.prompt(
-        menuConfig.menuIndexOptions as QuestionCollection,
-      );
-      const cleanOption = stripAnsi(cvOptions);
+    const { cvOptions } = await inquirer.prompt(menuConfig.menuIndexOptions as QuestionCollection);
+    const cleanOption = stripAnsi(cvOptions);
 
-      if (this.pageExtraName && cleanOption === this.pageExtraName) {
-        await this.showPageExtra();
-      } else if (cleanOption === 'Exit') {
-        clearConsole();
-      } else {
-        clearConsole();
-        await this.showPageCV(cleanOption);
-      }
-    } catch (error) {
-      console.error('Error in menuIndex:', error);
+    if (this.pageExtraName && cleanOption === this.pageExtraName) {
+      await this.showPageExtra();
+    } else if (cleanOption === 'Exit') {
+      clearConsole();
+    } else {
+      clearConsole();
+      await this.showPageCV(cleanOption);
     }
   }
 
-  async menuBackExit(): Promise<void> {
+  async menuBack(): Promise<void> {
     log(''); // empty row
+    const { menuBack } = await inquirer.prompt(menuConfig.menuBackOptions as QuestionCollection);
+    const cleanOption = stripAnsi(menuBack);
 
-    try {
-      const { menuBack } = await inquirer.prompt(
-        menuConfig.menuBackExitOptions as QuestionCollection,
-      );
-      const cleanOption = stripAnsi(menuBack);
-
-      if (cleanOption === 'Back') {
-        clearConsole();
-        await this.menuIndex();
-      } else {
-        clearConsole();
-      }
-    } catch (error) {
-      console.error('Error in menuBackExit:', error);
+    if (cleanOption === 'Back') {
+      clearConsole();
+      await this.menuIndex();
+    } else {
+      clearConsole();
     }
   }
 
@@ -140,25 +129,49 @@ export class Core implements ICore {
     this.print.empty();
     this.print.bottom();
 
-    await this.menuBackExit();
+    await this.showMenuBack();
   }
 
   async pageExtra(): Promise<void> {
     clearConsole();
     this.print.titleAscii(this.pageExtraName || '');
     this.print.pageExtraContent(this.pageExtraContent || '');
-    await this.menuBackExit();
+    await this.showMenuBack();
+  }
+
+  async showMenuBack(): Promise<void> {
+    try {
+      await this.menuBack();
+    } catch (error) {
+      console.error('An unexpected error occurred while showing the menu back.');
+      console.debug('Error details:', error);
+    }
   }
 
   async showMenuIndex(): Promise<void> {
-    await handleNarrowConsole(this.menuIndex.bind(this), this.cvStyles);
+    try {
+      await handleNarrowConsole(this.menuIndex.bind(this), this.cvStyles);
+    } catch (error) {
+      console.error('An unexpected error occurred while showing the menu index.');
+      console.debug('Error details:', error);
+    }
   }
 
   async showPageCV(option: string): Promise<void> {
-    await handleNarrowConsole(this.pageCV.bind(this, option), this.cvStyles);
+    try {
+      await handleNarrowConsole(this.pageCV.bind(this, option), this.cvStyles);
+    } catch (error) {
+      console.error('An error occurred while showing the CV page');
+      console.debug('Error details:', error);
+    }
   }
 
   async showPageExtra(): Promise<void> {
-    await handleNarrowConsole(this.pageExtra.bind(this), this.cvStyles);
+    try {
+      await handleNarrowConsole(this.pageExtra.bind(this), this.cvStyles);
+    } catch (error) {
+      console.error('An error occurred while showing the extra page');
+      console.debug('Error details:', error);
+    }
   }
 }

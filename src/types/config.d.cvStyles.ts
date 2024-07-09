@@ -1,7 +1,7 @@
 import { Chalk } from 'chalk';
-import { CvStyles } from 'functions.d.print.js';
+import { ICvStyles } from 'functions.d.print.js';
 
-export interface ConfigCvStyles extends CvStyles {
+export interface IConfigICvStyles extends ICvStyles {
   titleStyleBox: Chalk;
   subTitleStyleBox: Chalk;
   bodyStyleBox: Chalk;

@@ -18,7 +18,7 @@ export const menuIndexOptions = {
   choices: [...Object.keys(cvContent), 'Exit'],
 };
 
-export const menuBackExitOptions = {
+export const menuBackOptions = {
   type: 'list',
   name: 'menuBack',
   message: 'Go back or Exit?',
@@ -29,11 +29,11 @@ export const titleAsciiText = 'Index';
 export const titleAsciiPadding = null;
 
 export const subtitleAsciiText = 'Welcome to my resume!';
-export const subtitleAsciiColor = themeColors.shade3;
+export const subtitleAsciiColor = themeColors.shade_3;
 
 const defaultMenuConfig = {
   menuIndexOptions,
-  menuBackExitOptions,
+  menuBackOptions,
   titleAsciiText,
   titleAsciiPadding,
   subtitleAsciiText,

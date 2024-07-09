@@ -1,18 +1,20 @@
+import { Chalk } from 'chalk';
 import figlet from 'figlet';
 import { cleanAsciiArtText, log, paddingColorRows } from './functions.helper.js';
 import { themeBox } from '../default/default.themeBox.js';
-import { CvStyles, BoxStyle, IPrint } from 'functions.d.print.js';
-import { Chalk } from 'chalk';
+
+import type { ICvStyles, IBoxStyle, IPrint } from 'functions.d.print.ts';
+import type { TitleAsciiShades } from 'config.d.themeColors.ts';
 
 export class Print implements IPrint {
   outlinesVertical: number = 2;
   length: number;
   boxColor: Chalk;
   textPaddingX: number;
-  style: BoxStyle;
-  titleAsciiShades: Record<string, string>;
+  style: IBoxStyle;
+  titleAsciiShades: TitleAsciiShades;
 
-  constructor(cvStyles: CvStyles) {
+  constructor(cvStyles: ICvStyles) {
     this.length = cvStyles.maxCvWidth - this.outlinesVertical;
     this.boxColor = cvStyles.boxColor;
     this.textPaddingX = cvStyles.textPaddingX;

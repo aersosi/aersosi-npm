@@ -1,10 +1,11 @@
 import { Chalk } from 'chalk';
 import { Print } from '../core/functions.print';
-import { defaultCvStyles } from '../default/default.cvStyles.js';
+import { IConfigCvContent } from 'config.d.cvContent.js';
+import { IConfigICvStyles } from 'config.d.cvStyles.js';
 
 export interface ICore {
-  cvContent: CvContent;
-  cvStyles: CvStyles;
+  cvContent: IConfigCvContent;
+  cvStyles: IConfigICvStyles;
   print: Print;
   titleAsciiText: string;
   titleAsciiPadding: number;
@@ -13,14 +14,3 @@ export interface ICore {
   pageExtraName: string | null;
   pageExtraContent: string | null;
 }
-
-interface CvContent {
-  [key: string]: Array<{
-    title?: string;
-    subtitle?: string;
-    emptyLine?: string;
-    body?: string;
-  }>;
-}
-
-type CvStyles = typeof defaultCvStyles;
