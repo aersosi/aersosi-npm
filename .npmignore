@@ -1,0 +1,9 @@
+.gitignore
+.npmignore
+.prettierignore
+.prettierrc
+eslint.config.js
+LICENSE
+README.md
+todo.md
+tsconfig.json
