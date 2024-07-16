@@ -1,6 +1,6 @@
 {
   "type": "module",
-  "name": "clicv",
+  "name": "@aersosi/clicv",
   "version": "1.0.0",
   "description": "My resume in your cli",
   "main": "dist/index.js",
