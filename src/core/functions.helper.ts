@@ -5,7 +5,7 @@ import type { ICVStyles, TPageConfig } from 'functions.d.helper.ts';
 import type { TitleAsciiShades } from 'config.d.themeColors.ts';
 
 // Reliable Console Escape Sequence. Clear the console
-export const clearConsole = (): boolean => stdout.write('\x1Bc');
+export const clearConsole = (): boolean => stdout.write('\x1Bc\x1B[3J');
 
 // Shorthand for console.log
 export const log = (value: string): void => console.log(value); // shorthand
