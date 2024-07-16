@@ -18,6 +18,7 @@ import type { ICore } from 'functions.d.core.ts';
 import type { IConfigCvContent } from 'config.d.cvContent.ts';
 import type { IConfigICvStyles } from 'config.d.cvStyles.ts';
 
+// Import configurations with fallback to defaults
 const configICvStyles = await importConfig(
   defaultICvStyles,
   '../config/config.cvStyles.js',
@@ -46,6 +47,7 @@ export class Core implements ICore {
   pageExtraContent: string | null;
   print: Print;
 
+  // Initialize properties
   constructor() {
     this.cvContent = { ...defaultCvContent, ...configCvContent };
     this.cvStyles = { ...defaultICvStyles, ...configICvStyles };
@@ -58,6 +60,7 @@ export class Core implements ICore {
     this.pageExtraContent = pageExtraConfig ? pageExtraConfig.content : null;
   }
 
+  // Display the main menu
   async menuIndex(): Promise<void> {
     clearConsole();
 
@@ -78,6 +81,7 @@ export class Core implements ICore {
     }
   }
 
+  // Display the back menu
   async menuBack(): Promise<void> {
     log(''); // empty row
     const { menuBack } = await inquirer.prompt(menuConfig.menuBackOptions as QuestionCollection);
@@ -91,6 +95,7 @@ export class Core implements ICore {
     }
   }
 
+  // Display a CV page
   async pageCV(option: string): Promise<void> {
     if (!Object.prototype.hasOwnProperty.call(this.cvContent, option)) {
       console.error('Error: Missing or invalid data for ' + option);
@@ -103,16 +108,17 @@ export class Core implements ICore {
     this.print.top();
     this.print.empty();
 
-    data.forEach((info, index) => {
-      const formattingFunctions = {
-        emptyLine: () => this.print.empty(),
-        title: (value: string) =>
-          log(this.print.text(`${value.toUpperCase()}`, this.cvStyles.titleStyleBox)),
-        subtitle: (value: string) =>
-          log(this.print.text(`${value}`, this.cvStyles.subTitleStyleBox)),
-        body: (value: string) => log(this.print.text(`${value}`, this.cvStyles.bodyStyleBox)),
-      };
+    // Formatting functions for different content types
+    const formattingFunctions = {
+      emptyLine: () => this.print.empty(),
+      title: (value: string) =>
+        log(this.print.text(`${value.toUpperCase()}`, this.cvStyles.titleStyleBox)),
+      subtitle: (value: string) => log(this.print.text(`${value}`, this.cvStyles.subTitleStyleBox)),
+      body: (value: string) => log(this.print.text(`${value}`, this.cvStyles.bodyStyleBox)),
+    };
 
+    // Process and print each piece of data
+    data.forEach((info, index) => {
       Object.entries(info).forEach(([key, value]) => {
         const formatFunction =
           formattingFunctions[key as keyof typeof formattingFunctions] || formattingFunctions.body;
@@ -132,6 +138,7 @@ export class Core implements ICore {
     await this.showMenuBack();
   }
 
+  // Display the extra page
   async pageExtra(): Promise<void> {
     clearConsole();
     this.print.titleAscii(this.pageExtraName || '');
@@ -139,6 +146,7 @@ export class Core implements ICore {
     await this.showMenuBack();
   }
 
+  // Show the back menu with error handling
   async showMenuBack(): Promise<void> {
     try {
       await this.menuBack();
@@ -148,6 +156,7 @@ export class Core implements ICore {
     }
   }
 
+  // Show the main menu with error handling
   async showMenuIndex(): Promise<void> {
     try {
       await handleNarrowConsole(this.menuIndex.bind(this), this.cvStyles);
@@ -157,6 +166,7 @@ export class Core implements ICore {
     }
   }
 
+  // Show a CV page with error handling
   async showPageCV(option: string): Promise<void> {
     try {
       await handleNarrowConsole(this.pageCV.bind(this, option), this.cvStyles);
@@ -166,6 +176,7 @@ export class Core implements ICore {
     }
   }
 
+  // Show the extra page with error handling
   async showPageExtra(): Promise<void> {
     try {
       await handleNarrowConsole(this.pageExtra.bind(this), this.cvStyles);

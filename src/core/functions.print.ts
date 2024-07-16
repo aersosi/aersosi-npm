@@ -14,6 +14,7 @@ export class Print implements IPrint {
   style: IBoxStyle;
   titleAsciiShades: TitleAsciiShades;
 
+  // Initialize properties
   constructor(cvStyles: ICvStyles) {
     this.length = cvStyles.maxCvWidth - this.outlinesVertical;
     this.boxColor = cvStyles.boxColor;
@@ -22,6 +23,7 @@ export class Print implements IPrint {
     this.titleAsciiShades = cvStyles.titleAsciiShades;
   }
 
+  // Method to print the top border of the box
   top(): void {
     log(
       this.boxColor(
@@ -30,6 +32,7 @@ export class Print implements IPrint {
     );
   }
 
+  // Method to print the bottom border of the box
   bottom(): void {
     log(
       this.boxColor(
@@ -38,6 +41,7 @@ export class Print implements IPrint {
     );
   }
 
+  // Method to print a divider line within the box
   divider(): void {
     log(
       this.boxColor(
@@ -46,14 +50,17 @@ export class Print implements IPrint {
     );
   }
 
+  // Method to print an empty line within the box
   empty(): void {
     log(this.boxColor(`${this.style.vertical}${' '.repeat(this.length)}${this.style.vertical}`));
   }
 
+  // Method to format and print text within the box
   text(string: string, bodyStyleBox: Chalk): string {
     const ellipsis = '...';
     let stringSanitized;
 
+    // Truncate the string and add ellipsis at the end if it's too long
     if (string.length > this.length - this.textPaddingX * 2) {
       stringSanitized =
         string.slice(0, this.length - this.textPaddingX * 2 - ellipsis.length) + ellipsis;
@@ -61,11 +68,13 @@ export class Print implements IPrint {
       stringSanitized = string.padEnd(this.length - this.textPaddingX * 2);
     }
 
+    // Add padding and format the text
     const rowContent =
       ' '.repeat(this.textPaddingX) + stringSanitized + ' '.repeat(this.textPaddingX);
     return `${this.boxColor(this.style.vertical)}${bodyStyleBox(rowContent)}${this.boxColor(this.style.vertical)}`;
   }
 
+  // Method to create and print ASCII art title
   titleAscii(string: string = 'test', titlePaddingX: number | null = null): void {
     const asciiArtText = figlet.textSync(string, {
       font: 'ANSI Regular',
@@ -73,8 +82,8 @@ export class Print implements IPrint {
       whitespaceBreak: true,
     });
 
+    // Clean and process the ASCII art text
     const cleanLines = cleanAsciiArtText(asciiArtText);
-
     const processedRows = paddingColorRows(
       cleanLines,
       titlePaddingX,
@@ -83,9 +92,11 @@ export class Print implements IPrint {
       this.titleAsciiShades,
     );
 
+    // Print the processed ASCII art
     log(`\n${processedRows}`);
   }
 
+  // Method to print the content on the extra page
   pageExtraContent(content: string): void {
     log(content);
   }
