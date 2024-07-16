@@ -152,7 +152,7 @@ export const configCvContent: IConfigCvContent = {
     {
       title: 'LinkedIn',
       emptyLine: '',
-      body1: 'https://www.linkedin.com/in/aersosi/',
+      body1: 'https://www.linkedin.com/in/aersosi',
     },
     {
       title: 'NPM',
@@ -162,7 +162,7 @@ export const configCvContent: IConfigCvContent = {
     {
       title: 'Codepen',
       emptyLine: '',
-      body1: 'https://codepen.io/aersosi/',
+      body1: 'https://codepen.io/aersosi',
     },
     {
       title: 'Email',
