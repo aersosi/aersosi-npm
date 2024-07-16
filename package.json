@@ -1,8 +1,8 @@
 {
   "type": "module",
-  "name": "aersosi-npm",
+  "name": "clicv",
   "version": "1.0.0",
-  "description": "My resume as an NPM package",
+  "description": "My resume in your cli",
   "main": "dist/index.js",
   "scripts": {
     "start": "npm run eslint && npm run build && npm run dist",
@@ -32,16 +32,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aersosi/aersosi-npm.git"
+    "url": "git+https://github.com/aersosi/clicv.git"
   },
   "keywords": [
+    "cli",
     "resume",
     "npm"
   ],
   "author": "Arthur Ersosi",
   "license": "Apache-2.0",
   "bugs": {
-    "url": "https://github.com/aersosi/aersosi-npm/issues"
+    "url": "https://github.com/aersosi/clicv/issues"
   },
-  "homepage": "https://github.com/aersosi/aersosi-npm#readme"
+  "homepage": "https://github.com/aersosi/clicv#readme"
 }

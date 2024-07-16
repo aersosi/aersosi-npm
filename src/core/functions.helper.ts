@@ -1,10 +1,16 @@
 import chalk from 'chalk';
+import { stdout } from 'process';
 
 import type { ICVStyles, TPageConfig } from 'functions.d.helper.ts';
 import type { TitleAsciiShades } from 'config.d.themeColors.ts';
 
-export const clearConsole = (): boolean => process.stdout.write('\x1Bc'); // Reliable Console Escape Sequence
+// Reliable Console Escape Sequence. Clear the console
+export const clearConsole = (): boolean => stdout.write('\x1Bc');
+
+// Shorthand for console.log
 export const log = (value: string): void => console.log(value); // shorthand
+
+// Import configuration with fallback to default
 export async function importConfig<T>(
   defaultModule: T,
   modulePath: string,
@@ -19,6 +25,7 @@ export async function importConfig<T>(
   }
 }
 
+// Import extra page configuration
 export async function importExtraPageConfig(): Promise<TPageConfig> {
   try {
     const pageExtraModule = await import('../config/config.pageExtra.js');
@@ -32,8 +39,9 @@ export async function importExtraPageConfig(): Promise<TPageConfig> {
   }
 }
 
+// Handle narrow console by checking width
 export async function handleNarrowConsole(option: () => void, cvStyles: ICVStyles): Promise<void> {
-  const consoleWidth = process.stdout.columns;
+  const consoleWidth = stdout.columns;
 
   if (consoleWidth < cvStyles.maxCvWidth) {
     await checkConsoleWidth(option, cvStyles);
@@ -42,9 +50,10 @@ export async function handleNarrowConsole(option: () => void, cvStyles: ICVStyle
   }
 }
 
+// Check console width and prompt user to increase if necessary
 export async function checkConsoleWidth(option: () => void, cvStyles: ICVStyles): Promise<void> {
   const intervalCheckWidth = setInterval(() => {
-    const newConsoleWidth = process.stdout.columns;
+    const newConsoleWidth = stdout.columns;
 
     clearConsole();
     if (newConsoleWidth < cvStyles.maxCvWidth) {
@@ -56,6 +65,7 @@ export async function checkConsoleWidth(option: () => void, cvStyles: ICVStyles)
   }, 250);
 }
 
+// Convert figlet string to 2D array
 function figletStringtoArray(figletString: string): string[][] {
   return figletString
     .split('\n')
@@ -75,6 +85,7 @@ function figletStringtoArray(figletString: string): string[][] {
     .filter(group => group.length > 0);
 }
 
+// Transform lines into a formatted structure
 function transformLines(lines: string[][]): (string | Record<string, string[]>)[] {
   let newLines: (string | Record<string, string[]>)[];
 
@@ -92,6 +103,7 @@ function transformLines(lines: string[][]): (string | Record<string, string[]>)[
   return newLines;
 }
 
+// Find the longest line in each sub-array
 function findLongestLine(arr: string[][]): number[] {
   return arr.map(childArray => {
     if (!Array.isArray(childArray) || childArray.length === 0) {
@@ -102,6 +114,7 @@ function findLongestLine(arr: string[][]): number[] {
   });
 }
 
+// Clean and format ASCII art text
 export function cleanAsciiArtText(asciiArtText: string): (string | Record<string, string[]>)[] {
   const lines = figletStringtoArray(asciiArtText);
 
@@ -112,6 +125,7 @@ export function cleanAsciiArtText(asciiArtText: string): (string | Record<string
   return transformLines(lines);
 }
 
+// Add padding and color to ASCII art rows
 export function paddingColorRows(
   cleanLines: (string | Record<string, string[]>)[],
   titlePaddingX: number | null = null,
@@ -127,10 +141,12 @@ export function paddingColorRows(
 
       const key = Object.keys(obj)[0] as string;
       const lines = (obj as { [key: string]: string[] })[key];
-      let linePaddingX = titlePaddingX;
+      let linePaddingX: number;
 
-      if (linePaddingX === null) {
+      if (titlePaddingX === null) {
         linePaddingX = Math.ceil((maxCvWidth + outlinesVertical - parseInt(key)) * 0.5);
+      } else {
+        linePaddingX = titlePaddingX;
       }
 
       const colors = Object.values(titleAsciiShades);
