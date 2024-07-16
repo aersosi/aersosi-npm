@@ -1,5 +1,8 @@
 # clicv
 
+<img src="./assets/aersosi-npx-screenshot.png" width="400px">
+
+
 ## Table of Contents
 - [Introduction](#introduction)
 - [Run](#run)
@@ -17,9 +20,9 @@
 
 ## Introduction
 
-**@aersosi/clicv** is an Node.js package that allows you to display your CV (Curriculum Vitae) in the terminal.
+**@aersosi/clicv** is an Node.js package that allows you to display your CV (Curriculum Vitae) in the cli.
 It's designed for developers who want to showcase their professional profile in a unique, tech-savvy way.
-The package is open-source, customizable, and can be easily forked and modified to create your own terminal-based CV.
+The package is open-source, customizable, and can be easily forked and modified to create your own cli-based CV.
 
 Whether you're looking to make your CV stand out or simply want to explore a creative way to present professional
 information, clicv offers a fresh approach to the traditional resume.
@@ -37,7 +40,7 @@ npx @aersosi/clicv
 Key features include:
 - **ASCII Style Title**: Create eye-catching headers with customizable colors.
 - **Flexible Box Styles**: Choose from square, rounded, or double border styles for content presentation.
-- **Width Management**: Automatic checks and warnings to ensure proper display across different terminal sizes.
+- **Width Management**: Automatic checks and warnings to ensure proper display across different cli sizes.
 - **Customizable Extra Page**: Add additional information or sections as needed.
 - **Interactive Navigation**: Use the inquirer menu for easy navigation through the CV.
 - **Theming**: Extensive color customization options for various CV elements.
