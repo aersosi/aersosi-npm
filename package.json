@@ -3,6 +3,8 @@
   "name": "@aersosi/clicv",
   "version": "1.0.0",
   "description": "My resume in your cli",
+  "bin": { "clicv": "dist/index.js" },
+  "files": ["dist/**"],
   "main": "dist/index.js",
   "scripts": {
     "start": "npm run eslint && npm run build && npm run dist",
@@ -11,6 +13,7 @@
     "dist": "node dist/index.js"
   },
   "dependencies": {
+    "@aersosi/clicv": "^1.0.0",
     "chalk": "^4.1.2",
     "figlet": "^1.7.0",
     "inquirer": "^8.1.2",
@@ -37,6 +40,7 @@
   "keywords": [
     "cli",
     "resume",
+    "cv",
     "npm"
   ],
   "author": "Arthur Ersosi",
