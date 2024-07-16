@@ -32,7 +32,7 @@ export const configCvContent: IConfigCvContent = {
       emptyLine: '',
       body1: 'I always wanted to create a business card as an NPM package.',
       emptyLine2: '',
-      body2: 'https://github.com/aersosi/aersosi-npm/',
+      body2: 'https://github.com/aersosi/clicv/',
     },
     {
       title: 'Analog work',
