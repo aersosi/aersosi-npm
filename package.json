@@ -1,7 +1,7 @@
 {
   "type": "module",
   "name": "@aersosi/clicv",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "My resume in your cli",
   "bin": { "clicv": "dist/index.js" },
   "files": ["dist/**"],

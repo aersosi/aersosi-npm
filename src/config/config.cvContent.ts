@@ -7,7 +7,7 @@ export const configCvContent: IConfigCvContent = {
       emptyLine: '',
       body1: 'My site is still under construction but I can already show the design.',
       emptyLine2: '',
-      body3: 'UI draft in Figma: https://tinyurl.com/29pnkxcc',
+      body3: 'UI draft in Figma: https://tinyurl.com/2cbe9yyy',
     },
     {
       title: 'CARY Medical',
@@ -16,7 +16,7 @@ export const configCvContent: IConfigCvContent = {
       body2: 'internal api with Webex. Our app creates and manages the conferences,',
       body3: 'which are then held in the CISCO Webex app.',
       emptyLine2: '',
-      body4: 'Clickdummy: https://tinyurl.com/yx9hks27',
+      body4: 'Clickdummy: https://tinyurl.com/38wjdr4m',
     },
     {
       title: 'rescoped',
@@ -32,7 +32,7 @@ export const configCvContent: IConfigCvContent = {
       emptyLine: '',
       body1: 'I always wanted to create a business card as an NPM package.',
       emptyLine2: '',
-      body2: 'https://github.com/aersosi/clicv/',
+      body2: 'https://github.com/aersosi/clicv',
     },
     {
       title: 'Analog work',
