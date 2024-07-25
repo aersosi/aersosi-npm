@@ -9,8 +9,9 @@
   "scripts": {
     "start": "npm run eslint && npm run build && npm run dist",
     "eslint": "npx eslint .",
-    "build": "tsc",
-    "dist": "node dist/index.js",
+    "clean-dist": "rm -rf ./dist",
+    "build-dist": "tsc",
+    "run-dist": "node dist/index.js",
     "npm-publish": "npm publish --access=public --dry-run"
   },
   "dependencies": {
